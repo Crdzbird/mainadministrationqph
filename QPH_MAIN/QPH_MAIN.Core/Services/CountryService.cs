@@ -1,0 +1,63 @@
+﻿using Microsoft.Extensions.Options;
+using QPH_MAIN.Core.CustomEntities;
+using QPH_MAIN.Core.Entities;
+using QPH_MAIN.Core.Exceptions;
+using QPH_MAIN.Core.Interfaces;
+using QPH_MAIN.Core.QueryFilters;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace QPH_MAIN.Core.Services
+{
+    public class CountryService : ICountryService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationOptions _paginationOptions;
+
+        public CountryService(IUnitOfWork unitOfWork, IOptions<PaginationOptions> options)
+        {
+            _unitOfWork = unitOfWork;
+            _paginationOptions = options.Value;
+        }
+
+        public async Task<Country> GetCountry(int id)
+        {
+            return await _unitOfWork.CountryRepository.GetById(id);
+        }
+
+        public PagedList<Country> GetCountries(CountryQueryFilter filters)
+        {
+            filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
+            filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
+            var countries = _unitOfWork.CountryRepository.GetAll();
+            if (filters.Name != null)
+            {
+                countries = countries.Where(x => x.name.ToLower().Contains(filters.Name.ToLower()));
+            }
+            var pagedPosts = PagedList<Country>.Create(countries, filters.PageNumber, filters.PageSize);
+            return pagedPosts;
+        }
+
+        public async Task InsertCountry(Country country)
+        {
+            await _unitOfWork.CountryRepository.Add(country);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateCountry(Country country)
+        {
+            var existingCountry = await _unitOfWork.CountryRepository.GetById(country.Id);
+            existingCountry.name =  country.name;
+            _unitOfWork.CountryRepository.Update(existingCountry);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteCountry(int id)
+        {
+            await _unitOfWork.CountryRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+    }
+}
