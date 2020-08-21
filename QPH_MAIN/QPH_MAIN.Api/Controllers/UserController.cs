@@ -101,11 +101,12 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Activate user by activationCode
         /// </summary>
-        [HttpPost("activateAccount")]
+        [HttpGet("activateAccount")]
         public async Task<IActionResult> ActivateAccount([FromQuery] string activationCode)
         {
-            await _userService.ActivateUserAccount(activationCode);
-            return Ok("Account activated");
+
+            if (await _userService.ActivateUserAccount(activationCode)) return Ok("Account Activated");
+            return NotFound();
         }
 
         /// <summary>

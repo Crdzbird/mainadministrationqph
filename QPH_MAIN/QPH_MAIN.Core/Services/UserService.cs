@@ -89,6 +89,9 @@ namespace QPH_MAIN.Core.Services
             user.activation_code = GenerateActivationCode();
             user.status = false;
             user.is_account_activated = false;
+            user.facebook_access_token = user.facebook_access_token ?? "";
+            user.firebase_token = user.firebase_token ?? "";
+            user.google_access_token = user.google_access_token ?? "";
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.SaveChangesAsync();
             return user;
@@ -97,6 +100,7 @@ namespace QPH_MAIN.Core.Services
         public async Task<bool> ActivateUserAccount(string code)
         {
             var userActivation = await _unitOfWork.UserRepository.GetUserByActivationCode(code);
+            if (userActivation == null) return false;
             userActivation.activation_code = "";
             userActivation.status = true;
             userActivation.is_account_activated = true;
