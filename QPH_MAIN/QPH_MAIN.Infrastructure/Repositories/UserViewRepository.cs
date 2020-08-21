@@ -10,20 +10,8 @@ namespace QPH_MAIN.Infrastructure.Repositories
     public class UserViewRepository : BaseRepository<UserView>, IUserViewRepository
     {
         public UserViewRepository(QPHContext context) : base(context) { }
-
-        public async Task<UserView> GetHierarchyByChildren(int childrenId)
-        {
-            return await _entities.FirstOrDefaultAsync(x => x.children == childrenId);
-        }
-
-        public async Task<UserView> GetHierarchyByParent(int parentId)
-        {
-            return await _entities.FirstOrDefaultAsync(x => x.parent == parentId);
-        }
-
-        public async Task RemoveByUserId(int userId)
-        {
-            _entities.RemoveRange(await _entities.Where(u => u.userId == userId).ToListAsync());
-        }
+        public async Task<UserView> GetHierarchyByChildren(int childrenId) => await _entities.FirstOrDefaultAsync(x => x.children == childrenId);
+        public async Task<UserView> GetHierarchyByParent(int parentId) => await _entities.FirstOrDefaultAsync(x => x.parent == parentId);
+        public async Task RemoveByUserId(int userId) => _entities.RemoveRange(await _entities.Where(u => u.userId == userId).ToListAsync());
     }
 }

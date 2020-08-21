@@ -10,5 +10,6 @@ namespace QPH_MAIN.Core.Interfaces
         Task<IEnumerable<User>> GetUsersByIdRole(int roleId);
         Task<IEnumerable<User>> GetUsersByIdEnterprise(int enterpriseId);
         Task<User> GetUserByActivationCode(string activationCode);
+        Task<User> GetByUsername(string username);
     }
 }

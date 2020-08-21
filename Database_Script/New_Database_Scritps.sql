@@ -43,8 +43,8 @@ Create Table Enterprise(
 	id int identity(1,1) primary key not null,
 	id_city int not null,
 	commercial_name varchar(100) not null,
-	telephone text not null default 'N/A', -- N/A Means "NOT ASSIGNED"
-	email text not null default 'N/A',
+	telephone varchar(20) not null default 'N/A', -- N/A Means "NOT ASSIGNED"
+	email varchar(100) not null default 'N/A',
 	enterprise_address varchar(300) not null,
 	identification varchar(100) not null default 'N/A', --ex: here in nicaragua every business needs a RUC.
 	has_branches bit not null default 0, -- has_branches is used to identify if the business has any other child.
@@ -85,24 +85,22 @@ Create Table Blacklist(
 	public_ip varbinary(16) not null
 );
 Go
-select * from "User"
 
---TODO: TERMINAR USUARIO
 Create Table "User"(
 	id int identity(1,1) primary key not null,
 	id_role int not null,
 	id_enterprise int not null,
 	id_country int not null, -- nationality
-    nickname varchar(100) not null unique, -- Crdzbird or PSN-EXAMPLE: GHOST_VEGETTO
+    nickname varchar(100) not null unique
     email varchar(100) not null unique,
     phone_number varchar(50) unique,
-    hashPassword text not null,
-	activation_code text,
-    google_access_token text not null,
-    facebook_access_token text not null,
-    firebase_token text not null,
+    hashPassword varchar(max) not null,
+	activation_code varchar(max),
+    google_access_token varchar(max) not null,
+    facebook_access_token varchar(max) not null,
+    firebase_token varchar(max) not null,
     is_account_activated bit default 0,
-    profile_picture text not null default 'assets/profilePictures/default.jpg',
+    profile_picture varchar(max) not null default 'assets/profilePictures/default.jpg',
     status bit not null default 0,
     foreign key (id_role) references Roles(id),
 	foreign key (id_enterprise) references Enterprise(id),
@@ -113,7 +111,7 @@ Go
 Create Table "Sessions"(
 	id int identity(1,1) primary key not null,
 	id_user int not null,
-    session_token text not null default '', -- When the user check the remember me, the session isn't gonna expire, so the token is gonna be saved in the table Session.
+    session_token varchar(max) not null default '', -- When the user check the remember me, the session isn't gonna expire, so the token is gonna be saved in the table Session.
     started datetime default getdate(),
     ended timestamp,
     public_ip varbinary(16) not null,
@@ -177,67 +175,23 @@ Create Table EnterpriseCatalog(
 );
 Go
 
-	--STORED PROCEDURE TO ASSIGN FATHER WITH THEIR RESPECTIVE CHILDRENS.
-/*CREATE PROC AssignFatherWithChildrens(@fatherName varchar(100),	@childrens varchar(max))
-AS
-BEGIN
-	SET NOCOUNT ON
-	DECLARE @fatherId INT;
-	DECLARE @childId INT;
-	DECLARE @childrenName varchar(100), @Pos int
-	SET @childrens = LTRIM(RTRIM(@childrens))+ ','
-	SET @Pos = CHARINDEX(',', @childrens, 1)
-	IF REPLACE(@childrens, ',', '') <> ''
-	if exists(Select id from "Views" where "name" = @fatherName)
-		Set @fatherId = (Select id from "Views" where "name" = @fatherName);
-		BEGIN
-			WHILE @Pos > 0
-			BEGIN
-				SET @childrenName = LTRIM(RTRIM(LEFT(@childrens, @Pos - 1)))
-				IF @childrenName <> ''
-				BEGIN
-					Set @childId = (Select id from "Views" where "name" = @childrenName);
-					Insert into HierarchyView(parent,children) values(@fatherId, CAST(@childId AS int));
-				END
-				SET @childrens = RIGHT(@childrens, LEN(@childrens) - @Pos)
-				SET @Pos = CHARINDEX(',', @childrens, 1)
-
-			END
-		END	
-END
-GO*/
-
-
-select * from "Views";
-
-Select * from HierarchyView
-
 --HIERARCHICAL QUERY
 
-exec HierarchyViewByParentId @parentId=14 order by children)
-
-select top 1 parent from HierarchyView where parent not in(select children from HierarchyView) group by parent;
-
+exec HierarchyViewByParentId @parentId=14 order by children);
+Go
 
 insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('padreB','padreB'),('hijoA','hijoA'),('hijoB','hijoB'),('hijoC','hijoC'),
 ('nietoA','nietoA'),('nietoB','nietoB'),('nietoC','nietoC'),('nietoD','nietoD'),('subNietoA','subNietoA'),('subNietoB','subNietoB');
-
+Go
 
 insert into HierarchyView(parent, children) values (1,2),(1,3),(2,4),(2,5),(4,7),(3,6),(4,8),(5,9),(5,10),(10,11),(9,12);
+Go
 
 insert into UserView(id_user, parent, children) values(1,1,2),(1,1,3),(1,2,4),(1,2,5),(1,4,7),(1,3,6),(1,4,8),(1,5,9),(1,5,10),(1,10,11),(1,9,12);
-
-SELECT * FROM UserView
+Go
 
 exec HierarchyViewByUser @idUser = 1 order by (select "orderBy" from UserView where id_user = 1);
-
-
-select id_view as Id, id_user as son from UserView where id_user = 1 order by id_view;
-
-
-select * from HierarchyView;
-
-select top 1 id as parent, '' as title, 0 as children, id as Id from Views
+Go
 
 Create or Alter Procedure RemoveHierarchyViewByUser(@idUser int)
 As

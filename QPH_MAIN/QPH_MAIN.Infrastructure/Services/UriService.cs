@@ -13,11 +13,8 @@ namespace QPH_MAIN.Infrastructure.Services
             _baseUri = baseUri;
         }
 
-        public Uri GetActivationUri(string actionUrl)
-        {
-            return new Uri($"{_baseUri}{actionUrl}");
-        }
-
+        public Uri GetActivationUri(string actionUrl) => new Uri($"{_baseUri}{actionUrl}");
+ 
         public Uri GetPostPaginationUri(CityQueryFilter filter, string actionUrl)
         {
             string baseUrl = $"{_baseUri}{actionUrl}";

@@ -17,7 +17,6 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
             builder.Property(e => e.title)
                 .HasColumnName("title");
 
-
             builder.HasNoKey().ToView(null);
         }
     }

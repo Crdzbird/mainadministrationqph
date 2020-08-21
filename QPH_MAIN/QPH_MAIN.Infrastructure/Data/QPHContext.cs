@@ -9,7 +9,6 @@ namespace QPH_MAIN.Infrastructure.Data
         public QPHContext() {}
 
         public QPHContext(DbContextOptions<QPHContext> options) : base(options) {}
-
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<Views> Views { get; set; }
         public virtual DbSet<UserView> HierarchyView { get; set; }

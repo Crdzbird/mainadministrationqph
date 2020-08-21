@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
-using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using System.Linq;
@@ -20,16 +19,17 @@ namespace QPH_MAIN.Core.Services
             _paginationOptions = options.Value;
         }
 
-        public async Task<Country> GetCountry(int id)
-        {
-            return await _unitOfWork.CountryRepository.GetById(id);
-        }
+        public async Task<Country> GetCountry(int id) => await _unitOfWork.CountryRepository.GetById(id);
 
         public PagedList<Country> GetCountries(CountryQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
             filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
             var countries = _unitOfWork.CountryRepository.GetAll();
+            if (filters.filter != null)
+            {
+                countries = countries.Where(x => x.name.ToLower().Contains(filters.filter.ToLower()));
+            }
             if (filters.Name != null)
             {
                 countries = countries.Where(x => x.name.ToLower().Contains(filters.Name.ToLower()));

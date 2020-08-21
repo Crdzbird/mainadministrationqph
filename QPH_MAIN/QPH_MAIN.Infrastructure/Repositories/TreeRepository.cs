@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Infrastructure.Data;

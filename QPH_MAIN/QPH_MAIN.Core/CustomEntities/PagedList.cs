@@ -10,7 +10,6 @@ namespace QPH_MAIN.Core.CustomEntities
         public int TotalPages { get; set; }
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
-
         public bool HasPreviousPage => CurrentPage > 1;
         public bool HasNextPage => CurrentPage < TotalPages;
         public int? NextPageNumber => HasNextPage ? CurrentPage + 1 : (int?)null;
@@ -22,7 +21,6 @@ namespace QPH_MAIN.Core.CustomEntities
             PageSize = pageSize;
             CurrentPage = pageNumber;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
             AddRange(items);
         }
 
@@ -30,7 +28,6 @@ namespace QPH_MAIN.Core.CustomEntities
         {
             var count = source.Count();
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
     }

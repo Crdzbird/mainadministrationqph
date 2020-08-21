@@ -20,17 +20,18 @@ namespace QPH_MAIN.Core.Services
             _paginationOptions = options.Value;
         }
 
-        public async Task<Enterprise> GetEnterprise(int id)
-        {
-            return await _unitOfWork.EnterpriseRepository.GetById(id);
-        }
+        public async Task<Enterprise> GetEnterprise(int id) => await _unitOfWork.EnterpriseRepository.GetById(id);
 
         public PagedList<Enterprise> GetEnterprises(EnterpriseQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
             filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
             var enterprises = _unitOfWork.EnterpriseRepository.GetAll();
-
+            if (filters.filter != null)
+            {
+                enterprises = enterprises.Where(x => x.commercial_name.ToLower().Contains(filters.filter.ToLower()));
+                enterprises = enterprises.Where(x => x.enterprise_address.ToLower().Contains(filters.enterprise_address.ToLower()));
+            }
             if (filters.id_city != null)
             {
                 enterprises = enterprises.Where(x => x.id_city == filters.id_city);
@@ -50,7 +51,6 @@ namespace QPH_MAIN.Core.Services
 
         public async Task InsertEnterprise(Enterprise enterprise)
         {
-            //var region = await _unitOfWork.RegionRepository.GetById(city.id_region);
             var city = await _unitOfWork.CityRepository.GetById(enterprise.id_city);
             if (city == null)
             {
@@ -73,7 +73,6 @@ namespace QPH_MAIN.Core.Services
             existingEnterprise.latitude = enterprise.latitude;
             existingEnterprise.longitude = enterprise.longitude;
             existingEnterprise.status = enterprise.status;
-
             _unitOfWork.EnterpriseRepository.Update(existingEnterprise);
             await _unitOfWork.SaveChangesAsync();
             return true;

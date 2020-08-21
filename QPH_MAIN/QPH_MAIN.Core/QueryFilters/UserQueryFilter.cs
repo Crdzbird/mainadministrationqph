@@ -2,6 +2,7 @@
 {
     public class UserQueryFilter
     {
+        public string filter { get; set; }
         public int? RoleId { get; set; }
         public int? EnterpriseId { get; set; }
         public int? CountryId { get; set; }

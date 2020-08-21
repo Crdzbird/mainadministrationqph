@@ -1,5 +1,4 @@
-﻿using QPH_MAIN.Core.Entities;
-using QPH_MAIN.Core.Interfaces;
+﻿using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Infrastructure.Data;
 using System.Threading.Tasks;
 
@@ -16,7 +15,6 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly ITreeRepository _treeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRolesRepository _rolesRepository;
-        private readonly ISecurityRepository _securityRepository;
         private readonly IEnterpriseRepository _enterpriseRepository;
 
         public UnitOfWork(QPHContext context)
@@ -28,7 +26,6 @@ namespace QPH_MAIN.Infrastructure.Repositories
         public IRegionRepository RegionRepository => _regionRepository ?? new RegionRepository(_context);
         public ICountryRepository CountryRepository => _countryRepository ?? new CountryRepository(_context);
         public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
-        public ISecurityRepository SecurityRepository => _securityRepository ?? new SecurityRepository(_context);
         public IRolesRepository RolesRepository => _rolesRepository ?? new RolesRepository(_context);
         public IViewRepository ViewRepository => _viewsRepository ?? new ViewsRepository(_context);
         public ITreeRepository TreeRepository => _treeRepository ?? new TreeRepository(_context);
@@ -37,20 +34,10 @@ namespace QPH_MAIN.Infrastructure.Repositories
 
         public void Dispose()
         {
-            if (_context != null)
-            {
-                _context.Dispose();
-            }
+            if (_context != null) _context.Dispose();
         }
 
-        public void SaveChanges()
-        {
-            _context.SaveChanges();
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+        public void SaveChanges() => _context.SaveChanges();
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

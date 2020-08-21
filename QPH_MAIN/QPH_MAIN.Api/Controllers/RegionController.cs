@@ -33,7 +33,6 @@ namespace QPH_MAIN.Api.Controllers
             _uriService = uriService;
         }
 
-
         /// <summary>
         /// Retrieve all regions
         /// </summary>

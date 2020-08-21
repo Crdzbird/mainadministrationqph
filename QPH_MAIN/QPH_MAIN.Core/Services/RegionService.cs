@@ -20,17 +20,18 @@ namespace QPH_MAIN.Core.Services
             _paginationOptions = options.Value;
         }
 
-        public async Task<Region> GetRegion(int id)
-        {
-            return await _unitOfWork.RegionRepository.GetById(id);
-        }
+        public async Task<Region> GetRegion(int id) => await _unitOfWork.RegionRepository.GetById(id);
 
         public PagedList<Region> GetRegions(RegionQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
             filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
             var regions = _unitOfWork.RegionRepository.GetAll();
-            if(filters.CountryId != null)
+            if (filters.filter != null)
+            {
+                regions = regions.Where(x => x.name.ToLower().Contains(filters.filter.ToLower()));
+            }
+            if (filters.CountryId != null)
             {
                 regions = regions.Where(x => x.id_country == filters.CountryId);
             }

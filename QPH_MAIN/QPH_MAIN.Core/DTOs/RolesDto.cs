@@ -1,5 +1,4 @@
-﻿
-namespace QPH_MAIN.Core.DTOs
+﻿namespace QPH_MAIN.Core.DTOs
 {
     public class RolesDto
     {

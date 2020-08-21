@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
-using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using System.Linq;
@@ -20,17 +19,18 @@ namespace QPH_MAIN.Core.Services
             _paginationOptions = options.Value;
         }
 
-        public async Task<Views> GetView(int id)
-        {
-            return await _unitOfWork.ViewRepository.GetById(id);
-        }
-
+        public async Task<Views> GetView(int id) => await _unitOfWork.ViewRepository.GetById(id);
 
         public PagedList<Views> GetViews(ViewQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
             filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
             var views = _unitOfWork.ViewRepository.GetAll();
+            if (filters.filter != null)
+            {
+                views = views.Where(x => x.code.ToLower().Contains(filters.filter.ToLower()));
+                views = views.Where(x => x.name.ToLower().Contains(filters.filter.ToLower()));
+            }
             if (filters.Code != null)
             {
                 views = views.Where(x => x.code == filters.Code);
@@ -80,9 +80,6 @@ namespace QPH_MAIN.Core.Services
             return true;
         }
 
-        public async Task DeleteHierarchyByUserId(int userId)
-        {
-            await _unitOfWork.UserViewRepository.RemoveByUserId(userId);
-        }
+        public async Task DeleteHierarchyByUserId(int userId) => await _unitOfWork.UserViewRepository.RemoveByUserId(userId);
     }
 }

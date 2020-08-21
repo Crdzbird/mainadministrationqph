@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Enumerations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QPH_MAIN.Infrastructure.Data.Configurations
 {
@@ -48,8 +46,8 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
                .HasMaxLength(15)
                .IsRequired()
                .HasConversion(
-                x => x.ToString(),
-                x => (RoleType)Enum.Parse(typeof(RoleType), x)
+                    x => x.ToString(),
+                    x => (RoleType)Enum.Parse(typeof(RoleType), x)
                 );
         }
     }

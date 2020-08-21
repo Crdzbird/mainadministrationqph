@@ -11,10 +11,6 @@ namespace QPH_MAIN.Infrastructure.Repositories
     public class RegionRepository : BaseRepository<Region>, IRegionRepository
     {
         public RegionRepository(QPHContext context) : base(context) { }
-
-        public async Task<IEnumerable<Region>> GetRegionsByIdCountry(int countryId)
-        {
-            return await _entities.Where(x => x.id_country == countryId).ToListAsync();
-        }
+        public async Task<IEnumerable<Region>> GetRegionsByIdCountry(int countryId) => await _entities.Where(x => x.id_country == countryId).ToListAsync();
     }
 }

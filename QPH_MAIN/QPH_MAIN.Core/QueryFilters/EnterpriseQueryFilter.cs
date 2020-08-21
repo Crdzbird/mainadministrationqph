@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace QPH_MAIN.Core.QueryFilters
+﻿namespace QPH_MAIN.Core.QueryFilters
 {
     public class EnterpriseQueryFilter
     {
+        public string filter { get; set; }
         public int? id_city { get; set; }
         public string commercial_name { get; set; }
         public string enterprise_address { get; set; }

@@ -9,7 +9,6 @@ using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using QPH_MAIN.Infrastructure.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -38,7 +37,6 @@ namespace QPH_MAIN.Api.Controllers
             _mapper = mapper;
             _uriService = uriService;
         }
-
 
         /// <summary>
         /// Retrieve all views
@@ -122,18 +120,18 @@ namespace QPH_MAIN.Api.Controllers
             return Ok(response);
         }
 
-        //[Authorize]
+        /// <summary>
+        /// Build HierarchyView By User Authenticated.
+        /// </summary>
+        [Authorize]
         [HttpGet("buildHierarchyViewByUser")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ObtainTree()
         {
-            //if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            //string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            return Ok(await _treeService.GetHierarchyTreeByUserId(1));
-            //var hierarchyDto = _mapper.Map<TreeDto>(tree);
-           // var response = new ApiResponse<TreeDto>(hierarchyDto);
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(await _treeService.GetHierarchyTreeByUserId(int.Parse(userId)));
         }
-
 
         /// <summary>
         /// Remove view by id

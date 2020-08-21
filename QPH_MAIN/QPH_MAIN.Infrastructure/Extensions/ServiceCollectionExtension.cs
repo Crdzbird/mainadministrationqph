@@ -35,6 +35,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IRolesService, RolesService>();
             services.AddTransient<IEnterpriseService, EnterpriseService>();
             services.AddTransient<IUserService, UserService>();
@@ -46,8 +47,6 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<IUserViewService, HierarchyViewService>();
             services.AddTransient<ITreeService, TreeService>();
             services.AddTransient<IRolesService, RolesService>();
-            services.AddTransient<ISecurityService, SecurityService>();
-            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<IUriService>(provider =>

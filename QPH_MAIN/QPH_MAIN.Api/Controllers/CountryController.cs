@@ -9,9 +9,7 @@ using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using QPH_MAIN.Infrastructure.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -32,7 +30,6 @@ namespace QPH_MAIN.Api.Controllers
             _mapper = mapper;
             _uriService = uriService;
         }
-
 
         /// <summary>
         /// Retrieve all countries

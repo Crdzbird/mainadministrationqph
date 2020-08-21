@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
-using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using System.Linq;
@@ -20,17 +19,17 @@ namespace QPH_MAIN.Core.Services
             _paginationOptions = options.Value;
         }
 
-        public async Task<Roles> GetRole(int id)
-        {
-            return await _unitOfWork.RolesRepository.GetById(id);
-        }
+        public async Task<Roles> GetRole(int id) => await _unitOfWork.RolesRepository.GetById(id);
 
         public PagedList<Roles> GetRoles(RolesQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
             filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
-            
             var roles = _unitOfWork.RolesRepository.GetAll();
+            if (filters.filter != null)
+            {
+                roles = roles.Where(x => x.rolename.ToLower().Contains(filters.filter.ToLower()));
+            }
             if (filters.rolename != null)
             {
                 roles = roles.Where(x => x.rolename == filters.rolename);
