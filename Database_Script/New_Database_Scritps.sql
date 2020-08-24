@@ -148,6 +148,32 @@ Create Table UserView(
 );
 Go
 
+Create Table "Permissions"(
+	id_permission int identity(1,1) primary key not null,
+	permission varchar(50)not null unique
+);
+
+Create Table Cards(
+	id int identity(1,1) primary key not null,
+	"card" varchar(40)not null unique
+);
+
+Create Table UserCardGranted(
+	id_card_granted int identity(1,1) primary key not null,
+	id_user int not null,
+	id_card int not null,
+	foreign key(id_user)references "User"(id),
+	foreign key(id_card)references Cards(id)
+);
+
+Create Table UserCardPermissions(
+	id int identity(1,1) primary key not null,
+	id_card_granted int not null,
+	id_permission int not null,
+	foreign key(id_card_granted)references UserCardGranted(id_card_granted),
+	foreign key(id_permission)references "Permissions"(id_permission)
+);
+
 Create Table "Catalog"(
 	id int identity(1,1) primary key not null,
 	code varchar(50) not null,
@@ -165,8 +191,6 @@ Create Table HierarchyCatalog(
 	foreign key(children) references "Catalog"(id)
 );
 Go
-
-
 
 Create Table EnterpriseCatalog(
 	id int identity(1,1) primary key not null,
@@ -189,8 +213,14 @@ insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('p
 ('nietoA','nietoA'),('nietoB','nietoB'),('nietoC','nietoC'),('nietoD','nietoD'),('subNietoA','subNietoA'),('subNietoB','subNietoB');
 Go
 
+select * from UserView
+
+select * from "Views"
+
 insert into HierarchyView(parent, children) values (1,2),(1,3),(2,4),(2,5),(4,7),(3,6),(4,8),(5,9),(5,10),(10,11),(9,12);
 Go
+
+delete from UserView
 
 insert into UserView(id_user, parent, children) values(1,1,2),(1,1,3),(1,2,4),(1,2,5),(1,4,7),(1,3,6),(1,4,8),(1,5,9),(1,5,10),(1,10,11),(1,9,12);
 Go

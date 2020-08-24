@@ -20,6 +20,7 @@ namespace QPH_MAIN.Infrastructure.Data
         public virtual DbSet<Security> Securities { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Enterprise> Enterprise { get; set; }
+        public virtual DbSet<Permissions> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
