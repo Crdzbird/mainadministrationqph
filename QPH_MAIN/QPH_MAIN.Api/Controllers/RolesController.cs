@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using QPH_MAIN.Api.Responses;
@@ -10,6 +11,7 @@ using QPH_MAIN.Core.QueryFilters;
 using QPH_MAIN.Infrastructure.Interfaces;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Api.Controllers
@@ -34,11 +36,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetRoles))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<RolesDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetRoles([FromQuery] RolesQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var roles = _roleService.GetRoles(filters);
             var rolesDto = _mapper.Map<IEnumerable<RolesDto>>(roles);
             var metadata = new Metadata
@@ -63,9 +67,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve role by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRole(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var role = await _roleService.GetRole(id);
             var roleDto = _mapper.Map<RolesDto>(role);
             var response = new ApiResponse<RolesDto>(roleDto);
@@ -75,9 +81,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new role
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RolesDto roleDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var role = _mapper.Map<Roles>(roleDto);
             await _roleService.InsertRole(role);
             roleDto = _mapper.Map<RolesDto>(role);
@@ -88,9 +96,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update role
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, RolesDto roleDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var role = _mapper.Map<Roles>(roleDto);
             role.Id = id;
             var result = await _roleService.UpdateRole(role);
@@ -101,9 +111,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove city by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _roleService.DeleteRole(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

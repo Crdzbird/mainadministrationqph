@@ -43,11 +43,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetViews))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<ViewsDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetViews([FromQuery]ViewQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var views = _viewService.GetViews(filters);
             var viewsDto = _mapper.Map<IEnumerable<ViewsDto>>(views);
             var metadata = new Metadata
@@ -72,9 +74,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve view by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetView(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var views = await _viewService.GetView(id);
             var ViewsDto = _mapper.Map<ViewsDto>(views);
             var response = new ApiResponse<ViewsDto>(ViewsDto);
@@ -84,9 +88,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new view
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ViewsDto ViewsDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var view = _mapper.Map<Views>(ViewsDto);
             await _viewService.InsertView(view);
             ViewsDto = _mapper.Map<ViewsDto>(view);
@@ -97,9 +103,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new hierarchy by user and view
         /// </summary>
+        [Authorize]
         [HttpPost("rebuildHierarchy")]
         public async Task<IActionResult> Post([FromBody] TreeDto treeDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var tree = _mapper.Map<Tree>(treeDto);
             await _viewService.DeleteHierarchyByUserId(1);
             await _viewService.RebuildHierarchy(tree, 1);
@@ -110,9 +118,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update view
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, ViewsDto ViewsDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var view = _mapper.Map<Views>(ViewsDto);
             view.Id = id;
             var result = await _viewService.UpdateView(view);
@@ -130,16 +140,17 @@ namespace QPH_MAIN.Api.Controllers
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            System.Diagnostics.Debugger.Break();
             return Ok(await _treeService.GetHierarchyTreeByUserId(int.Parse(userId)));
         }
 
         /// <summary>
         /// Remove view by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _viewService.DeleteView(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

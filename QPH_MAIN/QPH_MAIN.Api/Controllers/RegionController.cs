@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Api.Controllers
@@ -38,11 +39,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetRegions))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<RegionDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetRegions([FromQuery]RegionQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var regions = _regionService.GetRegions(filters);
             var regionsDto = _mapper.Map<IEnumerable<RegionDto>>(regions);
             var metadata = new Metadata
@@ -67,9 +70,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve region by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRegion(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var region = await _regionService.GetRegion(id);
             var regionDto = _mapper.Map<RegionDto>(region);
             var response = new ApiResponse<RegionDto>(regionDto);
@@ -79,9 +84,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new region
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] RegionDto regionDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var region = _mapper.Map<Region>(regionDto);
             await _regionService.InsertRegion(region);
             regionDto = _mapper.Map<RegionDto>(region);
@@ -92,9 +99,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update region
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, RegionDto regionDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var region = _mapper.Map<Region>(regionDto);
             region.Id = id;
             var result = await _regionService.UpdateRegion(region);
@@ -105,9 +114,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove region by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _regionService.DeleteRegion(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

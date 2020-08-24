@@ -91,8 +91,8 @@ Create Table "User"(
 	id_role int not null,
 	id_enterprise int not null,
 	id_country int not null, -- nationality
-    nickname varchar(100) not null unique
-    email varchar(100) not null unique,
+    nickname varchar(100) not null unique,
+    email varchar(150) not null unique,
     phone_number varchar(50) unique,
     hashPassword varchar(max) not null,
 	activation_code varchar(max),
@@ -166,6 +166,8 @@ Create Table HierarchyCatalog(
 );
 Go
 
+
+
 Create Table EnterpriseCatalog(
 	id int identity(1,1) primary key not null,
 	id_enterprise int not null,
@@ -173,12 +175,15 @@ Create Table EnterpriseCatalog(
 	foreign key(id_enterprise) references Enterprise(id),
 	foreign key(id_catalog) references "Catalog"(id)
 );
-Go
 
+Go
+select * from "User" where activation_code = '*My9uTtSoVSN RDT.!zF8LR08XocYd8rpEmp';
 --HIERARCHICAL QUERY
 
 exec HierarchyViewByParentId @parentId=14 order by children);
 Go
+
+select * from "User";
 
 insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('padreB','padreB'),('hijoA','hijoA'),('hijoB','hijoB'),('hijoC','hijoC'),
 ('nietoA','nietoA'),('nietoB','nietoB'),('nietoC','nietoC'),('nietoD','nietoD'),('subNietoA','subNietoA'),('subNietoB','subNietoB');

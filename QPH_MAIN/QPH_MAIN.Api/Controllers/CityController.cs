@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Api.Controllers
@@ -39,11 +40,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetCities))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<CityDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetCities([FromQuery]CityQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var cities = _cityService.GetCities(filters);
             var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
             var metadata = new Metadata
@@ -68,9 +71,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve city by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCity(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var city = await _cityService.GetCity(id);
             var cityDto = _mapper.Map<CityDto>(city);
             var response = new ApiResponse<CityDto>(cityDto);
@@ -80,9 +85,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new city
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CityDto cityDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var city = _mapper.Map<City>(cityDto);
             await _cityService.InsertCity(city);
             cityDto = _mapper.Map<CityDto>(city);
@@ -93,9 +100,10 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update city
         /// </summary>
-        [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Put(int id, CityDto cityDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var city = _mapper.Map<City>(cityDto);
             city.Id = id;
             var result = await _cityService.UpdateCity(city);
@@ -106,9 +114,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove city by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _cityService.DeleteCity(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

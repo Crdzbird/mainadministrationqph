@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +14,9 @@ using QPH_MAIN.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,11 +48,14 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        /// 
+        [Authorize]
         [HttpGet(Name = nameof(GetUsers))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<UserDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetUsers([FromQuery] UserQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var users = _userService.GetUsers(filters);
             var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
             var metadata = new Metadata
@@ -72,6 +78,19 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
+        /// Obtain UserDetail by AuthenticationToken
+        /// </summary>
+        [Authorize]
+        [HttpGet("DetailedUser")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DetailedUser()
+        {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
+            return Ok(await _userService.GetUserDetail(int.Parse(userId)));
+        }
+
+        /// <summary>
         /// Signup
         /// </summary>
         [HttpPost("login")]
@@ -87,11 +106,28 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
+        /// Signout
+        /// </summary>
+        [Authorize]
+        [HttpPost("signout")]
+        public async Task<IActionResult> Signout()
+        {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
+            var user = await _userService.GetUser(int.Parse(userId));
+            user.google_access_token = "";
+            var result = await _userService.UpdateUser(user);
+            return Ok("Success");
+        }
+
+        /// <summary>
         /// Retrieve user by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var user = await _userService.GetUser(id);
             var userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);
@@ -104,7 +140,6 @@ namespace QPH_MAIN.Api.Controllers
         [HttpGet("activateAccount")]
         public async Task<IActionResult> ActivateAccount([FromQuery] string activationCode)
         {
-
             if (await _userService.ActivateUserAccount(activationCode)) return Ok("Account Activated");
             return NotFound();
         }
@@ -112,9 +147,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new user
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
@@ -128,9 +165,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update user
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, UserDto userDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var user = _mapper.Map<User>(userDto);
             user.Id = id;
             var result = await _userService.UpdateUser(user);
@@ -141,9 +180,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove city by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _userService.DeleteUser(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

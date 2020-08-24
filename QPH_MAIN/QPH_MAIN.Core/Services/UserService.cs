@@ -11,6 +11,7 @@ using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
+using QPH_MAIN.Core.DTOs;
 
 namespace QPH_MAIN.Core.Services
 {
@@ -189,5 +190,19 @@ namespace QPH_MAIN.Core.Services
         }
 
         public async Task<User> GetLoginByCredentials(UserLogin userLogin) => await _unitOfWork.UserRepository.GetByUsername(userLogin.User);
+
+        public async Task<UserDetailDto> GetUserDetail(int userId)
+        {
+            var existingUser = await _unitOfWork.UserRepository.GetById(userId);
+            return new UserDetailDto {
+                Country = existingUser.country,
+                Email = existingUser.email,
+                Enterprise = existingUser.enterprise,
+                Nickname = existingUser.nickname,
+                Phone_number = existingUser.phone_number,
+                Profile_picture = existingUser.profile_picture,
+                Tree = await _unitOfWork.TreeRepository.GetTreeByUserId(userId)
+            };
+        }
     }
 }

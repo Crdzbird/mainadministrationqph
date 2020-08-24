@@ -11,6 +11,7 @@ using QPH_MAIN.Core.QueryFilters;
 using QPH_MAIN.Infrastructure.Interfaces;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Api.Controllers
@@ -36,11 +37,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetCountries))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<CountryDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetCountries([FromQuery]CountryQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var countries = _countryService.GetCountries(filters);
             var countriesDto = _mapper.Map<IEnumerable<CountryDto>>(countries);
             var metadata = new Metadata
@@ -65,9 +68,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve country by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCountry(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var country = await _countryService.GetCountry(id);
             var countryDto = _mapper.Map<CountryDto>(country);
             var response = new ApiResponse<CountryDto>(countryDto);
@@ -77,9 +82,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new country
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CountryDto countryDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var country = _mapper.Map<Country>(countryDto);
             await _countryService.InsertCountry(country);
             countryDto = _mapper.Map<CountryDto>(country);
@@ -90,9 +97,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update country
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, CountryDto countryDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var country = _mapper.Map<Country>(countryDto);
             country.Id = id;
             var result = await _countryService.UpdateCountry(country);
@@ -103,9 +112,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove country by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _countryService.DeleteCountry(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

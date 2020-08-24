@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Api.Controllers
@@ -37,11 +38,13 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet(Name = nameof(GetEnterprises))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<EnterpriseDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetEnterprises([FromQuery] EnterpriseQueryFilter filters)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var enterprises = _enterpriseService.GetEnterprises(filters);
             var enterpriseDto = _mapper.Map<IEnumerable<EnterpriseDto>>(enterprises);
             var metadata = new Metadata
@@ -66,9 +69,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Retrieve enterprise by id
         /// </summary>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEnterprise(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var enterprise = await _enterpriseService.GetEnterprise(id);
             var enterpriseDto = _mapper.Map<EnterpriseDto>(enterprise);
             var response = new ApiResponse<EnterpriseDto>(enterpriseDto);
@@ -78,9 +83,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Insert new enterprise
         /// </summary>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EnterpriseDto enterpriseDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var enterprise = _mapper.Map<Enterprise>(enterpriseDto);
             await _enterpriseService.InsertEnterprise(enterprise);
             enterpriseDto = _mapper.Map<EnterpriseDto>(enterprise);
@@ -91,9 +98,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Update enterprise
         /// </summary>
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, EnterpriseDto enterpriseDto)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var enterprise = _mapper.Map<Enterprise>(enterpriseDto);
             enterprise.Id = id;
             var result = await _enterpriseService.UpdateEnterprise(enterprise);
@@ -104,9 +113,11 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Remove enterprise by id
         /// </summary>
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var result = await _enterpriseService.DeleteEnterprise(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
