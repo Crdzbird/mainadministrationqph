@@ -42,11 +42,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet(Name = nameof(GetCities))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<CityDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetCities([FromQuery]CityQueryFilter filters)
         {
-            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var cities = _cityService.GetCities(filters);
             var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
             var metadata = new Metadata
@@ -101,6 +98,7 @@ namespace QPH_MAIN.Api.Controllers
         /// Update city
         /// </summary>
         [Authorize]
+        [HttpPut]
         public async Task<IActionResult> Put(int id, CityDto cityDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();

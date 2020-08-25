@@ -9,7 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using QPH_MAIN.Infrastructure.Extensions;
 using QPH_MAIN.Infrastructure.Filters;
+using Swashbuckle.Swagger;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -43,6 +45,11 @@ namespace QPH_MAIN.Api
             services.AddDbContexts(Configuration);
             services.AddServices();
             services.AddSwagger($"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "API QPH_MAIN", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+            });
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,10 +79,8 @@ namespace QPH_MAIN.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
+            
             app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(options =>

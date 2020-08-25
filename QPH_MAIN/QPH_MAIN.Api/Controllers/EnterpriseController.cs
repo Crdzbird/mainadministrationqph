@@ -40,8 +40,6 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet(Name = nameof(GetEnterprises))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<EnterpriseDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetEnterprises([FromQuery] EnterpriseQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();

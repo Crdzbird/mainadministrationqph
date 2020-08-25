@@ -39,8 +39,6 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet(Name = nameof(GetCountries))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<CountryDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetCountries([FromQuery]CountryQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();

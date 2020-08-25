@@ -26,6 +26,10 @@ namespace QPH_MAIN.Infrastructure.Mappings
             CreateMap<EnterpriseDto, Enterprise>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<PermissionsDto, Permissions>();
+            CreateMap<Permissions, PermissionsDto>();
+            CreateMap<CardsDto, Cards>();
+            CreateMap<Cards, CardsDto>();
             CreateMap<Security, SecurityDto>().ReverseMap();
         }
     }

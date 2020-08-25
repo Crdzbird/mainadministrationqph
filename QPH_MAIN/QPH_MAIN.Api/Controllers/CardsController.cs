@@ -21,43 +21,43 @@ namespace QPH_MAIN.Api.Controllers
 
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class RegionController : ControllerBase
+    public class CardsController : ControllerBase
     {
-        private readonly IRegionService _regionService;
+        private readonly ICardsService _cardsService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
 
-        public RegionController(IRegionService regionService, IMapper mapper, IUriService uriService)
+        public CardsController(ICardsService cityService, IMapper mapper, IUriService uriService)
         {
-            _regionService = regionService;
+            _cardsService = cityService;
             _mapper = mapper;
             _uriService = uriService;
         }
 
+
         /// <summary>
-        /// Retrieve all regions
+        /// Retrieve all cards
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetRegions))]
-        public IActionResult GetRegions([FromQuery]RegionQueryFilter filters)
+        [HttpGet(Name = nameof(GetCards))]
+        public IActionResult GetCards([FromQuery]CardsQueryFilter filters)
         {
-            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var regions = _regionService.GetRegions(filters);
-            var regionsDto = _mapper.Map<IEnumerable<RegionDto>>(regions);
+            var cards = _cardsService.GetCards(filters);
+            var citiesDto = _mapper.Map<IEnumerable<CardsDto>>(cards);
             var metadata = new Metadata
             {
-                TotalCount = regions.TotalCount,
-                PageSize = regions.PageSize,
-                CurrentPage = regions.CurrentPage,
-                TotalPages = regions.TotalPages,
-                HasNextPage = regions.HasNextPage,
-                HasPreviousPage = regions.HasPreviousPage,
-                NextPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetRegions))).ToString(),
-                PreviousPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetRegions))).ToString()
+                TotalCount = cards.TotalCount,
+                PageSize = cards.PageSize,
+                CurrentPage = cards.CurrentPage,
+                TotalPages = cards.TotalPages,
+                HasNextPage = cards.HasNextPage,
+                HasPreviousPage = cards.HasPreviousPage,
+                NextPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetCards))).ToString(),
+                PreviousPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetCards))).ToString()
             };
-            var response = new ApiResponse<IEnumerable<RegionDto>>(regionsDto)
+            var response = new ApiResponse<IEnumerable<CardsDto>>(citiesDto)
             {
                 Meta = metadata
             };
@@ -66,57 +66,58 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve region by id
+        /// Retrieve card by id
         /// </summary>
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRegion(int id)
+        public async Task<IActionResult> GetCard(int id)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var region = await _regionService.GetRegion(id);
-            var regionDto = _mapper.Map<RegionDto>(region);
-            var response = new ApiResponse<RegionDto>(regionDto);
+            var card = await _cardsService.GetCard(id);
+            var cardDto = _mapper.Map<CardsDto>(card);
+            var response = new ApiResponse<CardsDto>(cardDto);
             return Ok(response);
         }
 
         /// <summary>
-        /// Insert new region
+        /// Insert new card
         /// </summary>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RegionDto regionDto)
+        public async Task<IActionResult> Post([FromBody] CardsDto cardDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var region = _mapper.Map<Region>(regionDto);
-            await _regionService.InsertRegion(region);
-            regionDto = _mapper.Map<RegionDto>(region);
-            var response = new ApiResponse<RegionDto>(regionDto);
+            var card = _mapper.Map<Cards>(cardDto);
+            await _cardsService.InsertCard(card);
+            cardDto = _mapper.Map<CardsDto>(card);
+            var response = new ApiResponse<CardsDto>(cardDto);
             return Ok(response);
         }
 
         /// <summary>
-        /// Update region
+        /// Update card
         /// </summary>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Put(int id, RegionDto regionDto)
+        public async Task<IActionResult> Put(int id, CardsDto cardDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var region = _mapper.Map<Region>(regionDto);
-            region.Id = id;
-            var result = await _regionService.UpdateRegion(region);
+            var card = _mapper.Map<Cards>(cardDto);
+            card.Id = id;
+            var result = await _cardsService.UpdateCard(card);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
 
         /// <summary>
-        /// Remove region by id
+        /// Remove card by id
         /// </summary>
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _regionService.DeleteRegion(id);
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            var result = await _cardsService.DeleteCard(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }

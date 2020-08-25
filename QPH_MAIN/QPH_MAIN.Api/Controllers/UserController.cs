@@ -51,8 +51,6 @@ namespace QPH_MAIN.Api.Controllers
         /// 
         [Authorize]
         [HttpGet(Name = nameof(GetUsers))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<UserDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetUsers([FromQuery] UserQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
@@ -81,8 +79,7 @@ namespace QPH_MAIN.Api.Controllers
         /// Obtain UserDetail by AuthenticationToken
         /// </summary>
         [Authorize]
-        [HttpGet("DetailedUser")]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [HttpGet("detailedUser")]
         public async Task<IActionResult> DetailedUser()
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
@@ -91,7 +88,7 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
-        /// Signup
+        /// Login
         /// </summary>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLogin login)
@@ -105,20 +102,6 @@ namespace QPH_MAIN.Api.Controllers
             return NotFound();
         }
 
-        /// <summary>
-        /// Signout
-        /// </summary>
-        [Authorize]
-        [HttpPost("signout")]
-        public async Task<IActionResult> Signout()
-        {
-            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            var user = await _userService.GetUser(int.Parse(userId));
-            user.google_access_token = "";
-            var result = await _userService.UpdateUser(user);
-            return Ok("Success");
-        }
 
         /// <summary>
         /// Retrieve user by id

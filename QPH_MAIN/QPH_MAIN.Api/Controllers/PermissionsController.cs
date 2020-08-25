@@ -23,44 +23,41 @@ namespace QPH_MAIN.Api.Controllers
     [Route("api/[controller]")]
     public class PermissionsController : ControllerBase
     {
-        private readonly IPermissionService _permissionService;
+        private readonly IPermissionsService _permissionsService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
 
-        public PermissionsController(IPermissionService permissionService, IMapper mapper, IUriService uriService)
+        public PermissionsController(IPermissionsService permissionsService, IMapper mapper, IUriService uriService)
         {
-            _permissionService = permissionService;
+            _permissionsService = permissionsService;
             _mapper = mapper;
             _uriService = uriService;
         }
 
 
         /// <summary>
-        /// Retrieve all cities
+        /// Retrieve all permissions
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetCities))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<CityDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult GetCities([FromQuery] CityQueryFilter filters)
+        [HttpGet(Name = nameof(GetPermissions))]
+        public IActionResult GetPermissions([FromQuery]PermissionsQueryFilter filters)
         {
-            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var cities = _cityService.GetCities(filters);
-            var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);
+            var Permissions = _permissionsService.GetPermissions(filters);
+            var permissionsDto = _mapper.Map<IEnumerable<PermissionsDto>>(Permissions);
             var metadata = new Metadata
             {
-                TotalCount = cities.TotalCount,
-                PageSize = cities.PageSize,
-                CurrentPage = cities.CurrentPage,
-                TotalPages = cities.TotalPages,
-                HasNextPage = cities.HasNextPage,
-                HasPreviousPage = cities.HasPreviousPage,
-                NextPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetCities))).ToString(),
-                PreviousPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetCities))).ToString()
+                TotalCount = Permissions.TotalCount,
+                PageSize = Permissions.PageSize,
+                CurrentPage = Permissions.CurrentPage,
+                TotalPages = Permissions.TotalPages,
+                HasNextPage = Permissions.HasNextPage,
+                HasPreviousPage = Permissions.HasPreviousPage,
+                NextPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetPermissions))).ToString(),
+                PreviousPageUrl = _uriService.GetPostPaginationUri(filters, Url.RouteUrl(nameof(GetPermissions))).ToString()
             };
-            var response = new ApiResponse<IEnumerable<CityDto>>(citiesDto)
+            var response = new ApiResponse<IEnumerable<PermissionsDto>>(permissionsDto)
             {
                 Meta = metadata
             };
@@ -69,57 +66,58 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
-        /// Retrieve city by id
+        /// Retrieve permission by id
         /// </summary>
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCity(int id)
+        public async Task<IActionResult> GetPermission(int id)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var city = await _cityService.GetCity(id);
-            var cityDto = _mapper.Map<CityDto>(city);
-            var response = new ApiResponse<CityDto>(cityDto);
+            var permission = await _permissionsService.GetPermission(id);
+            var permissionDto = _mapper.Map<PermissionsDto>(permission);
+            var response = new ApiResponse<PermissionsDto>(permissionDto);
             return Ok(response);
         }
 
         /// <summary>
-        /// Insert new city
+        /// Insert new permission
         /// </summary>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CityDto cityDto)
+        public async Task<IActionResult> Post([FromBody] PermissionsDto permissionDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var city = _mapper.Map<City>(cityDto);
-            await _cityService.InsertCity(city);
-            cityDto = _mapper.Map<CityDto>(city);
-            var response = new ApiResponse<CityDto>(cityDto);
+            var permission = _mapper.Map<Permissions>(permissionDto);
+            await _permissionsService.InsertPermission(permission);
+            permissionDto = _mapper.Map<PermissionsDto>(permission);
+            var response = new ApiResponse<PermissionsDto>(permissionDto);
             return Ok(response);
         }
 
         /// <summary>
-        /// Update city
+        /// Update permission
         /// </summary>
         [Authorize]
-        public async Task<IActionResult> Put(int id, CityDto cityDto)
+        [HttpPut]
+        public async Task<IActionResult> Put(int id, PermissionsDto permissionDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var city = _mapper.Map<City>(cityDto);
-            city.Id = id;
-            var result = await _cityService.UpdateCity(city);
+            var permission = _mapper.Map<Permissions>(permissionDto);
+            permission.Id = id;
+            var result = await _permissionsService.UpdatePermission(permission);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
 
         /// <summary>
-        /// Remove city by id
+        /// Remove permission by id
         /// </summary>
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            var result = await _cityService.DeleteCity(id);
+            var result = await _permissionsService.DeletePermission(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }

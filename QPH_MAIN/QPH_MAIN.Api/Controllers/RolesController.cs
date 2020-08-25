@@ -38,8 +38,6 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet(Name = nameof(GetRoles))]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<RolesDto>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult GetRoles([FromQuery] RolesQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();

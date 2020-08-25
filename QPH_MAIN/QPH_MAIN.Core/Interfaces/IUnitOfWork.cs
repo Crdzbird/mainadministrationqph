@@ -15,6 +15,7 @@ namespace QPH_MAIN.Core.Interfaces
         ITreeRepository TreeRepository { get; }
         IEnterpriseRepository EnterpriseRepository { get; }
         IPermissionsRepository PermissionsRepository { get; }
+        ICardsRepository CardsRepository { get; }
         void SaveChanges();
         Task SaveChangesAsync();
     }

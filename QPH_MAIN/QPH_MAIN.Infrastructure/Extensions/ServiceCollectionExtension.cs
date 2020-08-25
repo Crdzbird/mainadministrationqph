@@ -36,18 +36,18 @@ namespace QPH_MAIN.Infrastructure.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-            services.AddTransient<IRolesService, RolesService>();
-            services.AddTransient<IEnterpriseService, EnterpriseService>();
-            services.AddTransient<IUserService, UserService>();
+
             services.AddTransient<ICityService, CityService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IRegionService, RegionService>();
+            services.AddTransient<ICardsService, CardsService>();
             services.AddTransient<ICountryService, CountryService>();
-            services.AddTransient<IViewService, ViewService>();
+            services.AddTransient<IEnterpriseService, EnterpriseService>();
             services.AddTransient<IUserViewService, HierarchyViewService>();
-            services.AddTransient<ITreeService, TreeService>();
-            services.AddTransient<IRolesService, RolesService>();
             services.AddTransient<IPermissionsService, PermissionsService>();
+            services.AddTransient<IRegionService, RegionService>();
+            services.AddTransient<IRolesService, RolesService>();
+            services.AddTransient<ITreeService, TreeService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IViewService, ViewService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<IUriService>(provider =>
@@ -64,7 +64,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
         {
             services.AddSwaggerGen(doc =>
             {
-                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "QPH API", Version = "v1" });
+                doc.SwaggerDoc("v2", new OpenApiInfo { Title = "QPH API", Version = "v1" });
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
                 doc.IncludeXmlComments(xmlPath);
             });
