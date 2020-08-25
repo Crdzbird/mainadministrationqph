@@ -47,6 +47,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<IRolesService, RolesService>();
             services.AddTransient<ITreeService, TreeService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserCardGrantedService, UserCardGrantedService>();
             services.AddTransient<IViewService, ViewService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IPasswordService, PasswordService>();

@@ -9,6 +9,7 @@ namespace QPH_MAIN.Core.Interfaces
         IRegionRepository RegionRepository { get; }
         ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
+        IUserCardGrantedRepository UserCardGrantedRepository { get; }
         IRolesRepository RolesRepository { get; }
         IViewRepository ViewRepository { get; }
         IUserViewRepository UserViewRepository { get; }

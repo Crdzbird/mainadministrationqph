@@ -8,7 +8,9 @@ namespace QPH_MAIN.Core.Entities
         public User()
         {
             userViews = new HashSet<UserView>();
+            userCardGranted = new HashSet<UserCardGranted>();
         }
+
         public int id_role { get; set; }
         public int id_enterprise { get; set; }
         public int id_country { get; set; }
@@ -26,6 +28,7 @@ namespace QPH_MAIN.Core.Entities
         public virtual Enterprise enterprise { get; set; }
         public virtual Country country { get; set; }
         public virtual Roles roles { get; set; }
+        public virtual ICollection<UserCardGranted> userCardGranted { get; set; }
         public virtual ICollection<UserView> userViews { get; set; }
     }
 }

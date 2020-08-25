@@ -159,7 +159,7 @@ namespace QPH_MAIN.Core.Services
             if (string.IsNullOrEmpty(allowedChars)) throw new ArgumentException("allowedChars no debe estar vacio.");
             const int byteSize = 0x100;
             var allowedCharSet = new HashSet<char>(allowedChars).ToArray();
-            if (byteSize < allowedCharSet.Length) throw new ArgumentException(String.Format("allowedChars puede contener no mas de {0} caracteres.", byteSize));
+            if (byteSize < allowedCharSet.Length) throw new ArgumentException(string.Format("allowedChars puede contener no mas de {0} caracteres.", byteSize));
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
             {
                 var result = new StringBuilder();
@@ -193,8 +193,14 @@ namespace QPH_MAIN.Core.Services
 
         public async Task<UserDetailDto> GetUserDetail(int userId)
         {
-            var existingUser = await _unitOfWork.UserRepository.GetById(userId);
+            var existingUser = await _unitOfWork.UserRepository.GetDetailUser(userId);
+            existingUser.enterprise.users = null;
+            existingUser.country.users = null;
+            existingUser.roles.users = null;
             return new UserDetailDto {
+                Id_role = existingUser.roles.Id,
+                Id_enterprise = existingUser.enterprise.Id,
+                Id_country = existingUser.country.Id,
                 Country = existingUser.country,
                 Email = existingUser.email,
                 Enterprise = existingUser.enterprise,
