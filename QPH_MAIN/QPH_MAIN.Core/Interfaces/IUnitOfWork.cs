@@ -12,6 +12,7 @@ namespace QPH_MAIN.Core.Interfaces
         IUserCardGrantedRepository UserCardGrantedRepository { get; }
         IRolesRepository RolesRepository { get; }
         IViewRepository ViewRepository { get; }
+        IViewCardRepository ViewCardRepository { get; }
         IUserViewRepository UserViewRepository { get; }
         ITreeRepository TreeRepository { get; }
         IEnterpriseRepository EnterpriseRepository { get; }

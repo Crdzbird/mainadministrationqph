@@ -2,14 +2,9 @@
 
 namespace QPH_MAIN.Core.Entities
 {
-    public partial class Cards : BaseEntity
+    public partial class CardsPermissionStatus : BaseEntity
     {
-        public Cards()
-        {
-            userCardGranted = new HashSet<UserCardGranted>();
-        }
-
         public string card { get; set; }
-        public virtual ICollection<UserCardGranted> userCardGranted { get; set; }
+        public List<PermissionStatus> permissionStatuses { get; set; }
     }
 }

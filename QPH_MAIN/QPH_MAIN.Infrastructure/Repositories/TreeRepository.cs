@@ -4,13 +4,18 @@ using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Infrastructure.Repositories
 {
     public class TreeRepository : BaseRepository<Tree>, ITreeRepository
     {
-        public TreeRepository(QPHContext context) : base(context) { }
+        QPHContext _context; 
+        public TreeRepository(QPHContext context) : base(context) {
+            this._context = context;
+        }
 
         public async Task<Tree> GetTreeByUserId(int userId)
         {
@@ -20,6 +25,22 @@ namespace QPH_MAIN.Infrastructure.Repositories
             Dictionary<int, Tree> dict = result.ToDictionary(loc => loc.son, loc => new Tree { son = loc.son, parent = loc.parent, title = loc.title, Id = loc.son });
             foreach (Tree loc in dict.Values)
             {
+                var cards = await _context.Cards.FromSqlRaw("exec BuildCardsByView @idView={0}", loc.son).ToListAsync();
+                List<CardsPermissionStatus> listCardsPermissions = new List<CardsPermissionStatus>();
+                if(cards != null)
+                {
+                    foreach (Cards card in cards)
+                    {
+                        listCardsPermissions.Add(new CardsPermissionStatus
+                        {
+                            Id = card.Id,
+                            card = card.card
+                        });
+                        
+                    }
+                }
+                loc.cards = listCardsPermissions;
+                loc.permissions = await _context.PermissionStatuses.FromSqlRaw("exec PermissionStatus @idUser = {0}, @idView = {1}", userId, loc.son).ToListAsync();
                 if (loc.parent != parentRoot.parent)
                 {
                     if (loc.son != loc.parent)

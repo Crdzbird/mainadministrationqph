@@ -11,6 +11,8 @@ namespace QPH_MAIN.Core.Entities
         public string title { get; set; }
         public int son { get; set; }
         public int parent { get; set; }
+        public List<CardsPermissionStatus> cards { get; set; }
+        public List<PermissionStatus> permissions { get; set; }
         public List<Tree> Children { get; set; }
     }
 }

@@ -166,6 +166,14 @@ Create Table UserCardGranted(
 	foreign key(id_card)references Cards(id)
 );
 
+Create Table ViewCard(
+	id int identity(1,1) primary key not null,
+	id_view int not null,
+	id_card int not null,
+	foreign key(id_view)references "Views"(id),
+	foreign key(id_card)references "Cards"(id)
+);
+
 Create Table UserCardPermissions(
 	id int identity(1,1) primary key not null,
 	id_card_granted int not null,

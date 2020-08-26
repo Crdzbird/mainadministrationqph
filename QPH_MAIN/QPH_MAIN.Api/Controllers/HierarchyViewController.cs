@@ -112,8 +112,7 @@ namespace QPH_MAIN.Api.Controllers
             var tree = _mapper.Map<Tree>(treeDto);
             await _viewService.DeleteHierarchyByUserId(int.Parse(userId));
             await _viewService.RebuildHierarchy(tree, int.Parse(userId));
-
-            return Ok(null);
+            return Ok();
         }
 
         /// <summary>

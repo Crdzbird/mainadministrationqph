@@ -71,8 +71,7 @@ namespace QPH_MAIN.Core.Services
             await _unitOfWork.UserViewRepository.Add(new UserView { userId = idUser , children = tree.son, parent = tree.parent });
             if (tree.Children.Count > 0)
             {
-                foreach(var sonTree in tree.Children)
-                {
+                foreach(var sonTree in tree.Children) {
                     await RebuildHierarchy(sonTree, idUser);
                 }
             }
