@@ -149,9 +149,38 @@ Create Table UserView(
 Go
 
 Create Table "Permissions"(
-	id_permission int identity(1,1) primary key not null,
+	id int identity(1,1) primary key not null,
 	permission varchar(50)not null unique
 );
+
+insert into Cards("card") values ('A5'),('B25'),('C52'),('D52'),('E52'),('G52'),('F52'),('H52'),('I52');
+
+select * from "Views";
+
+select * from "Cards";
+
+
+insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,7),(7,8),(8,9),(9,10),
+(10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
+
+
+INSERT INTO "Permissions"(permission) values ('create'),('read'),('update'),('download'),('delete'),('filter');
+
+Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(1,11),(1,20),(1,3),(1,12),(1,21);
+
+Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(1,2),(2,3),(2,4),(3,5),(4,6),(4,2),(4,4),(5,3),(6,1),(7,6),(8,2);
+
+
+
+create or replace function win_cardsbyviewtrees_with_title(parm1 integer) returns TABLE(id_view integer, id_card integer, card text, title text)
+	language sql
+as $$
+Select v.id_view_principal,c.id_card, c.card, c.title from win_cards c
+  Inner Join win_view_card vco on vco.id_card = c.id_card
+  Inner Join win_views_principal v on v.id_view_principal = vco.id_view
+  WHERE v.id_view_principal = $1
+
+$$;
 
 Create Table Cards(
 	id int identity(1,1) primary key not null,
@@ -179,7 +208,7 @@ Create Table UserCardPermissions(
 	id_card_granted int not null,
 	id_permission int not null,
 	foreign key(id_card_granted)references UserCardGranted(id_card_granted),
-	foreign key(id_permission)references "Permissions"(id_permission)
+	foreign key(id_permission)references "Permissions"(id)
 );
 
 Create Table "Catalog"(
@@ -235,6 +264,29 @@ Go
 
 exec HierarchyViewByUser @idUser = 1 order by (select "orderBy" from UserView where id_user = 1);
 Go
+
+exec PermissionStatus @idUser = 1, @idView =4;
+
+
+
+Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
+As
+Begin
+Select p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
+inner join UserCardGranted ucg on ucg.id_card_granted = ucp.id_card_granted 
+inner join ViewCard vc on vc.id_card = ucg.id_card
+where ucp.id_permission = p.id_permission and vc.id_view = @idView and ucg.id_user = @idUser)then 1 else 0 end) as status from "Permissions" p
+End;
+
+
+Create or Alter Procedure BuildCardsByView(@idView int)
+As
+begin
+	select c.id, c.card from Cards c
+	inner join ViewCard vc on vc.id_card = c.id
+	inner join "Views" v on v.id = vc.id_view
+	where v.id = @idView
+end;
 
 Create or Alter Procedure RemoveHierarchyViewByUser(@idUser int)
 As
