@@ -44,5 +44,10 @@ namespace QPH_MAIN.Core.Services
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
+
+        public async Task DeletePermissionByUserId(int userId)
+        {
+            await _unitOfWork.UserCardPermissionRepository.RemoveByUserId(userId);
+        }
     }
 }

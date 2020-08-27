@@ -24,15 +24,19 @@ namespace QPH_MAIN.Api.Controllers
     public class HierarchyViewController : ControllerBase
     {
         private readonly IViewService _viewService;
+        private readonly IUserCardGrantedService _userCardGrantedService;
+        private readonly IUserCardPermissionService _userCardPermissionService;
         private readonly IUserViewService _hierarchyViewService;
         private readonly ITreeService _treeService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
 
-        public HierarchyViewController(ITreeService treeService, IViewService viewService, IUserViewService hierarchyViewService, IMapper mapper, IUriService uriService)
+        public HierarchyViewController(ITreeService treeService, IViewService viewService, IUserViewService hierarchyViewService, IUserCardGrantedService userCardGrantedService, IUserCardPermissionService userCardPermissionService, IMapper mapper, IUriService uriService)
         {
             _treeService = treeService;
             _viewService = viewService;
+            _userCardGrantedService = userCardGrantedService;
+            _userCardPermissionService = userCardPermissionService;
             _hierarchyViewService = hierarchyViewService;
             _mapper = mapper;
             _uriService = uriService;
@@ -109,11 +113,13 @@ namespace QPH_MAIN.Api.Controllers
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            await _viewService.DeleteHierarchyByUserId(int.Parse(userId));
+            int userIds = int.Parse(userId);
+            await _viewService.DeleteHierarchyByUserId(userIds);
+            await _userCardPermissionService.DeletePermissionByUserId(userIds);
             foreach (var tree in hierarchyNewBuild.Root)
             {
                 var _tree = _mapper.Map<Tree>(tree);
-                await _viewService.RebuildHierarchy(_tree, int.Parse(userId));
+                await _viewService.RebuildHierarchy(_tree, userIds);
             }
             return Ok();
         }

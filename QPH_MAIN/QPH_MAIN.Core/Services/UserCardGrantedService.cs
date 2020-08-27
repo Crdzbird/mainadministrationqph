@@ -44,5 +44,7 @@ namespace QPH_MAIN.Core.Services
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
+
+        public async Task DeleteUserCardGrantedByUserId(int userId) => await _unitOfWork.UserCardGrantedRepository.RemoveByUserId(userId);
     }
 }

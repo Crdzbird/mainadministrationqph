@@ -69,6 +69,17 @@ namespace QPH_MAIN.Core.Services
         public async Task<bool> RebuildHierarchy(Tree tree, int idUser)
         {
             await _unitOfWork.UserViewRepository.Add(new UserView { userId = idUser , children = tree.son, parent = tree.parent });
+            if(tree.cards != null && tree.cards.Count > 0)
+            {
+                foreach (var card in tree.cards)
+                {
+                    await _unitOfWork.UserCardGrantedRepository.Add(new UserCardGranted { id_card = card.Id, id_user = idUser });
+                    foreach (var permission in tree.permissions)
+                    {
+                        if (permission.statuses == 1) await _unitOfWork.UserCardPermissionRepository.Add(new UserCardPermission { id_permission = permission.id, id_card_granted = await _unitOfWork.UserCardGrantedRepository.GetByCardAndUser(card.Id, idUser) });
+                    }
+                }
+            }
             if (tree.Children.Count > 0)
             {
                 foreach(var sonTree in tree.Children) {

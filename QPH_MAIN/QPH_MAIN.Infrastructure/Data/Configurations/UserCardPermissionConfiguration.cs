@@ -8,7 +8,7 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<UserCardPermission> builder)
         {
-            builder.ToTable("UserCardPermission");
+            builder.ToTable("UserCardPermissions");
 
             builder.HasKey(e => e.Id);
 

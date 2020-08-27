@@ -9,5 +9,6 @@ namespace QPH_MAIN.Core.Interfaces
         Task InsertUserCardPermission(UserCardPermission userCardPermission);
         Task<bool> UpdateUserCardPermission(UserCardPermission userCardPermission);
         Task<bool> DeleteUserCardPermission(int id);
+        Task DeletePermissionByUserId(int userId);
     }
 }

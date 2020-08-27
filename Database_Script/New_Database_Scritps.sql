@@ -277,10 +277,11 @@ exec PermissionStatus @idUser = 1, @idView =3;
 
 
 
+
 Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
 As
 Begin
-Select p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
+Select p.id, p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
 inner join UserCardGranted ucg on ucg.id = ucp.id_card_granted 
 inner join ViewCard vc on vc.id_card = ucg.id_card
 where ucp.id_permission = p.id and vc.id_view = @idView and ucg.id_user = @idUser)then 1 else 0 end) as status from "Permissions" p
@@ -400,3 +401,19 @@ With starting as (
 	union all select * from ancestors group by id, children, parent, title;
 end
 Go
+
+
+exec PermissionStatus @idUser = 2, @idView =16;
+exec PermissionStatus @idUser = 2, @idView =3;
+
+select * from UserView where id_user = 2;
+
+
+select * from UserCardGranted where id_user = 2
+
+select * from ViewCard where id_card = 3;
+
+
+select * from UserCardGranted where id_user = 2
+
+select * from UserCardPermissions where id_card_granted in(select id from UserCardGranted where id_user = 2);

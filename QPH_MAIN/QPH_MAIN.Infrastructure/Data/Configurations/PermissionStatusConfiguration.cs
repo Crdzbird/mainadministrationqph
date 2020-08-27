@@ -8,6 +8,9 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PermissionStatus> builder)
         {
+            builder.Property(e => e.id)
+                .HasColumnName("id");
+
             builder.Property(e => e.statuses)
                 .HasColumnName("status")
                 .HasColumnType("int");

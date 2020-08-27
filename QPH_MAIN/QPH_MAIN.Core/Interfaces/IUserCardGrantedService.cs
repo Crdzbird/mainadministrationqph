@@ -11,5 +11,6 @@ namespace QPH_MAIN.Core.Interfaces
         Task InsertUserCardGranted(UserCardGranted userCardGranted);
         Task<bool> UpdateUserCardGranted(UserCardGranted userCardGranted);
         Task<bool> DeleteUserCardGranted(int id);
+        Task DeleteUserCardGrantedByUserId(int userId);
     }
 }
