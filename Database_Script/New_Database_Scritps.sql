@@ -315,6 +315,8 @@ With starting as (
 End
 Go
 
+exec RemoveHierarchyViewByUserNew @idUser = 1
+
 
 Create or Alter Procedure RemoveHierarchyViewByUserNew(@idUser int)
 As
