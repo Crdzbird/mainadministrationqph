@@ -13,6 +13,11 @@ namespace QPH_MAIN.Infrastructure.Validators
             RuleFor(permission => permission.Permission)
                 .NotNull()
                 .WithMessage("El nombre del permiso no puede ser nulo");
+
+
+            RuleFor(permission => permission.Permission)
+                .Length(1, 10)
+                .WithMessage("La longitud del permiso debe estar entre 1 y 10 caracteres");
         }
     }
 }
