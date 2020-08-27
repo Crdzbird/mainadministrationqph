@@ -1,3 +1,4 @@
+using AntiXssMiddleware.Middleware;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -79,8 +80,7 @@ namespace QPH_MAIN.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-                app.UseDeveloperExceptionPage();
-            
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(options =>
@@ -88,6 +88,7 @@ namespace QPH_MAIN.Api
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
                 options.RoutePrefix = string.Empty;
             });
+            app.UseAntiXssMiddleware();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
