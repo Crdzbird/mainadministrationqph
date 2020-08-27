@@ -105,13 +105,16 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         [Authorize]
         [HttpPost("rebuildHierarchy")]
-        public async Task<IActionResult> Post([FromBody] TreeDto treeDto)
+        public async Task<IActionResult> Post([FromBody] HierarchyNewBuild hierarchyNewBuild)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            var tree = _mapper.Map<Tree>(treeDto);
             await _viewService.DeleteHierarchyByUserId(int.Parse(userId));
-            await _viewService.RebuildHierarchy(tree, int.Parse(userId));
+            foreach (var tree in hierarchyNewBuild.Root)
+            {
+                var _tree = _mapper.Map<Tree>(tree);
+                await _viewService.RebuildHierarchy(_tree, int.Parse(userId));
+            }
             return Ok();
         }
 

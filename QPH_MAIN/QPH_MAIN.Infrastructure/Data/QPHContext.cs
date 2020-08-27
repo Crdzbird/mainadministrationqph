@@ -15,6 +15,7 @@ namespace QPH_MAIN.Infrastructure.Data
         public virtual DbSet<ViewCard> ViewCards { get; set; }
         public virtual DbSet<UserView> HierarchyView { get; set; }
         public virtual DbSet<UserCardGranted> UserCardGranted { get; set; }
+        public virtual DbSet<UserCardPermission> UserCardPermission { get; set; }
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Tree> Tree { get; set; }

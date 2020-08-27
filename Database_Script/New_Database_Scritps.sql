@@ -164,7 +164,7 @@ insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6
 (10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
 
 
-INSERT INTO "Permissions"(permission) values ('create'),('read'),('update'),('download'),('delete'),('filter');
+INSERT INTO "Permissions"(permission) values ('reupload'),('read'),('update'),('download'),('delete'),('filter');
 
 Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(1,11),(1,20),(1,3),(1,12),(1,21);
 
@@ -188,7 +188,7 @@ Create Table Cards(
 );
 
 Create Table UserCardGranted(
-	id_card_granted int identity(1,1) primary key not null,
+	id int identity(1,1) primary key not null,
 	id_user int not null,
 	id_card int not null,
 	foreign key(id_user)references "User"(id),
@@ -202,6 +202,10 @@ Create Table ViewCard(
 	foreign key(id_view)references "Views"(id),
 	foreign key(id_card)references "Cards"(id)
 );
+
+insert UserCardPermissions(id_card_granted, id_permission) values (10, 1),(10, 5),(10, 3);
+
+//TODO HACER EL ENDPOINT USERCARDPERMISSION.
 
 Create Table UserCardPermissions(
 	id int identity(1,1) primary key not null,
@@ -244,6 +248,10 @@ select * from "User" where activation_code = '*My9uTtSoVSN RDT.!zF8LR08XocYd8rpE
 exec HierarchyViewByParentId @parentId=14 order by children);
 Go
 
+
+select * from "User"
+
+
 select * from "User";
 
 insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('padreB','padreB'),('hijoA','hijoA'),('hijoB','hijoB'),('hijoC','hijoC'),
@@ -265,7 +273,7 @@ Go
 exec HierarchyViewByUser @idUser = 1 order by (select "orderBy" from UserView where id_user = 1);
 Go
 
-exec PermissionStatus @idUser = 1, @idView =4;
+exec PermissionStatus @idUser = 1, @idView =3;
 
 
 
@@ -273,9 +281,9 @@ Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
 As
 Begin
 Select p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
-inner join UserCardGranted ucg on ucg.id_card_granted = ucp.id_card_granted 
+inner join UserCardGranted ucg on ucg.id = ucp.id_card_granted 
 inner join ViewCard vc on vc.id_card = ucg.id_card
-where ucp.id_permission = p.id_permission and vc.id_view = @idView and ucg.id_user = @idUser)then 1 else 0 end) as status from "Permissions" p
+where ucp.id_permission = p.id and vc.id_view = @idView and ucg.id_user = @idUser)then 1 else 0 end) as status from "Permissions" p
 End;
 
 

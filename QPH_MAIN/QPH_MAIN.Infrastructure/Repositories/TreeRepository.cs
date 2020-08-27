@@ -36,7 +36,6 @@ namespace QPH_MAIN.Infrastructure.Repositories
                             Id = card.Id,
                             card = card.card
                         });
-                        
                     }
                 }
                 loc.cards = listCardsPermissions;

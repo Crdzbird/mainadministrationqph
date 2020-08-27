@@ -15,6 +15,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly IUserViewRepository _userViewRepository;
         private readonly IViewCardRepository _viewCardRepository;
         private readonly IUserCardGrantedRepository _userCardGrantedRepository;
+        private readonly IUserCardPermissionRepository _userCardPermissionRepository;
         private readonly ITreeRepository _treeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRolesRepository _rolesRepository;
@@ -32,6 +33,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         public ICountryRepository CountryRepository => _countryRepository ?? new CountryRepository(_context);
         public IUserRepository UserRepository => _userRepository ?? new UserRepository(_context);
         public IUserCardGrantedRepository UserCardGrantedRepository => _userCardGrantedRepository ?? new UserCardGrantedRepository(_context);
+        public IUserCardPermissionRepository UserCardPermissionRepository => _userCardPermissionRepository ?? new UserCardPermissionRepository(_context);
         public IRolesRepository RolesRepository => _rolesRepository ?? new RolesRepository(_context);
         public IViewRepository ViewRepository => _viewsRepository ?? new ViewsRepository(_context);
         public IViewCardRepository ViewCardRepository => _viewCardRepository ?? new ViewCardRepository(_context);

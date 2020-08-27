@@ -196,6 +196,7 @@ namespace QPH_MAIN.Core.Services
             var existingUser = await _unitOfWork.UserRepository.GetDetailUser(userId);
             existingUser.enterprise.users = null;
             existingUser.country.users = null;
+            existingUser.country.regions = null;
             existingUser.roles.users = null;
             return new UserDetailDto {
                 Id_role = existingUser.roles.Id,
