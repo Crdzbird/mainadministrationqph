@@ -342,6 +342,8 @@ Go
 */
 select * from UserView
 
+delete from UserView
+
 /*Create or Alter Procedure HierarchyViewByUser(@idUser int)
 As
 begin
@@ -377,7 +379,11 @@ Go
 
 exec HierarchyViewByUserNew @idUser = 2;
 
-select * from UserView where id_user = 2
+select * from "User"
+
+select * from Views
+
+select * from UserView where id_user = 1 and parent =1
 delete from UserView where id = 163
 
 Create or Alter Procedure HierarchyViewByUserNew(@idUser int)
@@ -406,8 +412,8 @@ With starting as (
 		from UserView as t join ancestors as a on t.children = a.parent
 		join "Views" c on t.children = c.id
 	)
-	select id, children, parent, title  from descendants
-	union all select * from ancestors union group by id, children, parent, title;
+	select id, children, parent, title  from descendants group by id, children, parent, title
+	union select * from ancestors group by id, children, parent, title;
 end
 Go
 
