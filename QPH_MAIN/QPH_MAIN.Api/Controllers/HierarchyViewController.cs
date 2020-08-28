@@ -116,6 +116,7 @@ namespace QPH_MAIN.Api.Controllers
             int userIds = int.Parse(userId);
             await _viewService.DeleteHierarchyByUserId(userIds);
             await _userCardPermissionService.DeletePermissionByUserId(userIds);
+            await _userCardGrantedService.DeleteUserCardGrantedByUserId(userIds);
             foreach (var tree in hierarchyNewBuild.Root)
             {
                 var _tree = _mapper.Map<Tree>(tree);

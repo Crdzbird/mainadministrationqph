@@ -123,10 +123,14 @@ Go
 
 Create Table "Views"(
 	id int identity(1,1) primary key not null,
-	code varchar(10) not null,
+	code varchar(10) unique not null,
+	ruta varchar(300) not null,
 	"name" varchar(50)not null default '',
 );
 Go
+
+Select * from "Views"
+Select * from Cards
 
 Create Table HierarchyView(
 	id int identity(1,1) primary key not null,
