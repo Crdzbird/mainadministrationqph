@@ -159,6 +159,10 @@ select * from "Views";
 
 select * from "Cards";
 
+exec HierarchyViewByUserNew @idUser=2
+
+insert into HierarchyView(parent, children) values (1,1);
+
 
 insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,7),(7,8),(8,9),(9,10),
 (10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
@@ -170,6 +174,8 @@ Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(
 
 Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(1,2),(2,3),(2,4),(3,5),(4,6),(4,2),(4,4),(5,3),(6,1),(7,6),(8,2);
 
+
+select * from UserView;
 
 
 create or replace function win_cardsbyviewtrees_with_title(parm1 integer) returns TABLE(id_view integer, id_card integer, card text, title text)
@@ -369,7 +375,10 @@ Go
 */
 
 
-exec HierarchyViewByUserNew @idUser = 1;
+exec HierarchyViewByUserNew @idUser = 2;
+
+select * from UserView where id_user = 2
+delete from UserView where id = 163
 
 Create or Alter Procedure HierarchyViewByUserNew(@idUser int)
 As
@@ -398,7 +407,7 @@ With starting as (
 		join "Views" c on t.children = c.id
 	)
 	select id, children, parent, title  from descendants
-	union all select * from ancestors group by id, children, parent, title;
+	union all select * from ancestors union group by id, children, parent, title;
 end
 Go
 
@@ -411,7 +420,7 @@ select * from UserView where id_user = 2;
 
 select * from UserCardGranted where id_user = 2
 
-select * from ViewCard where id_card = 3;
+select * from ViewCard where id_view in(14,18,17,20,13);
 
 
 select * from UserCardGranted where id_user = 2

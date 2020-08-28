@@ -99,7 +99,7 @@ namespace QPH_MAIN.Api.Controllers
                 var token = GenerateToken(validation.Item2);
                 return Ok(new { token });
             }
-            return NotFound();
+            return NotFound("User not activated or not found");
         }
 
 
@@ -176,6 +176,7 @@ namespace QPH_MAIN.Api.Controllers
         private async Task<(bool, User)> IsValidUser(UserLogin login)
         {
             var user = await _userService.GetLoginByCredentials(login);
+            if (user == null) return (false, null);
             var isValid = _passwordService.Check(user.hashPassword, login.Password);
             return (isValid, user);
         }
