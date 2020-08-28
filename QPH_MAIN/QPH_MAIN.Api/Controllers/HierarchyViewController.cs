@@ -142,14 +142,14 @@ namespace QPH_MAIN.Api.Controllers
         /// <summary>
         /// Build HierarchyView By User Authenticated.
         /// </summary>
-        [Authorize]
+        //[Authorize]
         [HttpGet("buildHierarchyViewByUser")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ObtainTree()
         {
-            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            return Ok(await _treeService.GetHierarchyTreeByUserId(int.Parse(userId)));
+            //if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            //string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
+            return Ok(await _treeService.GetHierarchyTreeByUserId(2));
         }
 
         /// <summary>

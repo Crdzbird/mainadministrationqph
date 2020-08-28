@@ -19,8 +19,10 @@ namespace QPH_MAIN.Infrastructure.Repositories
 
         public async Task<Tree> GetTreeByUserId(int userId)
         {
-            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, '' as title, 0 as children, id as Id from Views").FirstOrDefaultAsync();
+            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, 1 as children, id as Id from Views").FirstOrDefaultAsync();
             var result = await _entities.FromSqlRaw("exec HierarchyViewByUserNew @idUser={0}", userId).ToListAsync();
+            result.Add(parentRoot);
+            System.Diagnostics.Debugger.Break();
             if (result == null || result.Count == 0) return null;
             Dictionary<int, Tree> dict = result.ToDictionary(loc => loc.son, loc => new Tree { son = loc.son, parent = loc.parent, title = loc.title, Id = loc.son });
             foreach (Tree loc in dict.Values)
@@ -40,16 +42,13 @@ namespace QPH_MAIN.Infrastructure.Repositories
                 }
                 loc.cards = listCardsPermissions;
                 loc.permissions = await _context.PermissionStatuses.FromSqlRaw("exec PermissionStatus @idUser = {0}, @idView = {1}", userId, loc.son).ToListAsync();
-                if (loc.parent != parentRoot.parent)
+                if (loc.parent != loc.Id)
                 {
-                    if (loc.son != loc.parent)
-                    {
-                        Tree parent = dict[loc.parent];
-                        parent.Children.Add(loc);
-                    }
+                    Tree parent = dict[loc.parent];
+                    parent.Children.Add(loc);
                 }
             }
-            Tree root = dict.Values.First(loc => loc.son != parentRoot.parent);
+            Tree root = dict.Values.First(loc => loc.parent == loc.Id);
             return root;
         }
     }
