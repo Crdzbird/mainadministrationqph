@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using QPH_MAIN.Core.DTOs;
+using QPH_MAIN.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace QPH_MAIN.Infrastructure.Validators
@@ -22,9 +24,22 @@ namespace QPH_MAIN.Infrastructure.Validators
                 .NotNull()
                 .WithMessage("El codigo de la vista no puede ser nulo");
 
+            /*RuleFor(view => view.Code)
+                .Must(UniqueCode)
+                .WithMessage("El codigo ya existe");*/
+
             RuleFor(view => view.Code)
                 .Length(1, 10)
                 .WithMessage("La longitud del codigo de vista debe estar entre 1 y 10 caracteres");
+        }
+
+        private bool UniqueCode(ViewsDto viewsDto, string name)
+        {
+            QPHContext _db = new QPHContext();
+            var dbView = _db.Views.Where(x => x.code.ToLower() == name.ToLower()).SingleOrDefault();
+            if (dbView == null)
+                return true;
+            return dbView.Id == viewsDto.Id;
         }
     }
 }

@@ -133,7 +133,7 @@ namespace QPH_MAIN.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
-           // if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
+            if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);

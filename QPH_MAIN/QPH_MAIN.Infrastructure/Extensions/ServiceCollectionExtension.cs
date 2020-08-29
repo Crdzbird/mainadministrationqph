@@ -36,7 +36,6 @@ namespace QPH_MAIN.Infrastructure.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<ICardsService, CardsService>();
             services.AddTransient<ICountryService, CountryService>();
