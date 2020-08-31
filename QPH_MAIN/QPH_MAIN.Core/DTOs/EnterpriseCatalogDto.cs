@@ -1,9 +1,9 @@
 ﻿namespace QPH_MAIN.Core.DTOs
 {
-    public class CityDto
+    public class EnterpriseCatalogDto
     {
         public int Id { get; set; }
-        public int id_region { get; set; }
-        public string Name { get; set; }
+        public int Id_enterprise { get; set; }
+        public int Id_catalog { get; set; }
     }
 }

@@ -41,15 +41,18 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IEnterpriseService, EnterpriseService>();
             services.AddTransient<IUserViewService, HierarchyViewService>();
+            services.AddTransient<IEnterpriseHierarchyCatalogService, CatalogHierarchyViewService>();
             services.AddTransient<IPermissionsService, PermissionsService>();
             services.AddTransient<IRegionService, RegionService>();
             services.AddTransient<IRolesService, RolesService>();
             services.AddTransient<ITreeService, TreeService>();
+            services.AddTransient<ICatalogTreeService, CatalogTreeService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserCardGrantedService, UserCardGrantedService>();
             services.AddTransient<IUserCardPermissionService, UserCardPermissionService>();
             services.AddTransient<IViewCardService, ViewCardService>();
             services.AddTransient<IViewService, ViewService>();
+            services.AddTransient<ICatalogService, CatalogService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<IUriService>(provider =>

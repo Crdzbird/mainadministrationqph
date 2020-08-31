@@ -18,10 +18,16 @@ namespace QPH_MAIN.Infrastructure.Mappings
             CreateMap<RolesDto, Roles>();
             CreateMap<Views, ViewsDto>();
             CreateMap<ViewsDto, Views>();
+            CreateMap<Catalog, CatalogDto>();
+            CreateMap<CatalogDto, Catalog>();
             CreateMap<Tree, TreeDto>();
             CreateMap<TreeDto, Tree>();
+            CreateMap<CatalogTree, CatalogTreeDto>();
+            CreateMap<CatalogTreeDto, CatalogTree>();
             CreateMap<UserView, UserViewDto>();
             CreateMap<UserViewDto, UserView>();
+            CreateMap<EnterpriseHierarchyCatalog, EnterpriseHierarchyCatalogDto>();
+            CreateMap<EnterpriseHierarchyCatalogDto, EnterpriseHierarchyCatalog>();
             CreateMap<Enterprise, EnterpriseDto>();
             CreateMap<EnterpriseDto, Enterprise>();
             CreateMap<User, UserDto>();

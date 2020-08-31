@@ -8,7 +8,7 @@ namespace QPH_MAIN.Core.Entities
         public Enterprise()
         {
             users = new HashSet<User>();
-            enterpriseCatalog = new HashSet<EnterpriseCatalog>();
+            enterpriseCatalog = new HashSet<EnterpriseHierarchyCatalog>();
         }
 
         public int id_city { get; set; }
@@ -24,6 +24,6 @@ namespace QPH_MAIN.Core.Entities
         public bool status { get; set; }
         public virtual City city { get; set; }
         public virtual ICollection<User> users { get; set; }
-        public virtual ICollection<EnterpriseCatalog> enterpriseCatalog { get; set; }
+        public virtual ICollection<EnterpriseHierarchyCatalog> enterpriseCatalog { get; set; }
     }
 }

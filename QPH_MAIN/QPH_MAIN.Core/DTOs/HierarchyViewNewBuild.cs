@@ -2,7 +2,7 @@
 
 namespace QPH_MAIN.Core.DTOs
 {
-    public class HierarchyNewBuild
+    public class HierarchyViewNewBuild
     {
         public List<TreeDto> Root { get; set; }
     }

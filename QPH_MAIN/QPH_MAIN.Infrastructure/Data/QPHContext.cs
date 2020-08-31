@@ -19,17 +19,20 @@ namespace QPH_MAIN.Infrastructure.Data
         public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Region> Region { get; set; }
         public virtual DbSet<Tree> Tree { get; set; }
+        public virtual DbSet<CatalogTree> CatalogTree { get; set; }
         public virtual DbSet<PermissionStatus> PermissionStatuses { get; set; }
         public virtual DbSet<Enterprise> Enterprises { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Enterprise> Enterprise { get; set; }
+        public virtual DbSet<EnterpriseHierarchyCatalog> EnterpriseHierarchyCatalog { get; set; }
         public virtual DbSet<Permissions> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Tree>().HasNoKey().ToView(null);
+            modelBuilder.Entity<CatalogTree>().HasNoKey().ToView(null);
             modelBuilder.Entity<PermissionStatus>().HasNoKey().ToView(null);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
