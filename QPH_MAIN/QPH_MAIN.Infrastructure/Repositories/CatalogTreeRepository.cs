@@ -19,7 +19,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
 
         public async Task<CatalogTree> GetCatalogTreeByEnterpriseId(int enterpriseId)
         {
-            var result = await _entities.FromSqlRaw("exec HierarchyCatalogByEnterpriseNew @idUser={0}", enterpriseId).ToListAsync();
+            var result = await _entities.FromSqlRaw("exec HierarchyCatalogByEnterpriseNew @idEnterprise={0}", enterpriseId).ToListAsync();
             if (result == null || result.Count == 0) return null;
             var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, 1 as children, id as Id from Catalog").FirstOrDefaultAsync();
             result.Add(parentRoot);
