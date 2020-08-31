@@ -109,7 +109,7 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         [Authorize]
         [HttpPost("rebuildHierarchy")]
-        public async Task<IActionResult> Post([FromBody] HierarchyNewBuild hierarchyNewBuild)
+        public async Task<IActionResult> Post([FromBody] HierarchyViewNewBuild hierarchyNewBuild)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             string userId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
