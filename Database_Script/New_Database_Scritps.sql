@@ -9,7 +9,13 @@ Go
 
 Use RRHH_MAIN;
 Go
+DBCC CHECKIDENT(CATALOG, RESEED, 0);
 
+select * from enterprise
+
+select * from Catalog;
+update Catalog set Catalog.id = 1 where code = 'root'
+delete from Catalog
 Create Table Country(
 	id int identity(1,1)primary key not null,
 	"name" varchar(100)not null unique
@@ -129,17 +135,15 @@ Create Table "Views"(
 );
 Go
 
-Select * from "Views"
-Select * from Cards
 
-Create Table HierarchyView(
+/*Create Table HierarchyView(
 	id int identity(1,1) primary key not null,
 	parent int not null,
 	children int not null,
 	foreign key(parent) references Views(id),
 	foreign key(children) references Views(id),
 );
-Go
+Go*/
 
 Create Table UserView(
 	id int identity(1,1) primary key not null,
@@ -152,10 +156,31 @@ Create Table UserView(
 );
 Go
 
+Create Table "Catalog"(
+	id int identity(1,1) primary key not null,
+	code varchar(50) not null,
+	"name" varchar(50) not null,
+	"description" varchar(300) not null default 'N/A',
+	status bit not null default 0,
+);
+Go
+
+Create Table EnterpriseHierarchyCatalog(
+	id int identity(1,1) primary key not null,
+	id_enterprise int not null,
+	parent int not null,
+	children int not null,
+	foreign key(id_enterprise) references Enterprise(id),
+	foreign key(parent) references "Catalog"(id),
+	foreign key(children) references "Catalog"(id)
+);
+Go
+
 Create Table "Permissions"(
 	id int identity(1,1) primary key not null,
 	permission varchar(50)not null unique
 );
+Go
 
 insert into Cards("card") values ('A5'),('B25'),('C52'),('D52'),('E52'),('G52'),('F52'),('H52'),('I52');
 
@@ -189,13 +214,14 @@ Select v.id_view_principal,c.id_card, c.card, c.title from win_cards c
   Inner Join win_view_card vco on vco.id_card = c.id_card
   Inner Join win_views_principal v on v.id_view_principal = vco.id_view
   WHERE v.id_view_principal = $1
-
 $$;
+Go
 
 Create Table Cards(
 	id int identity(1,1) primary key not null,
 	"card" varchar(40)not null unique
 );
+Go
 
 Create Table UserCardGranted(
 	id int identity(1,1) primary key not null,
@@ -204,6 +230,7 @@ Create Table UserCardGranted(
 	foreign key(id_user)references "User"(id),
 	foreign key(id_card)references Cards(id)
 );
+Go
 
 Create Table ViewCard(
 	id int identity(1,1) primary key not null,
@@ -212,10 +239,7 @@ Create Table ViewCard(
 	foreign key(id_view)references "Views"(id),
 	foreign key(id_card)references "Cards"(id)
 );
-
-insert UserCardPermissions(id_card_granted, id_permission) values (10, 1),(10, 5),(10, 3);
-
-//TODO HACER EL ENDPOINT USERCARDPERMISSION.
+Go
 
 Create Table UserCardPermissions(
 	id int identity(1,1) primary key not null,
@@ -224,34 +248,8 @@ Create Table UserCardPermissions(
 	foreign key(id_card_granted)references UserCardGranted(id_card_granted),
 	foreign key(id_permission)references "Permissions"(id)
 );
-
-Create Table "Catalog"(
-	id int identity(1,1) primary key not null,
-	code varchar(50) not null,
-	"name" varchar(50) not null,
-	"description" varchar(300) not null default 'N/A',
-	status bit not null default 0,
-);
 Go
 
-Create Table HierarchyCatalog(
-	id int identity(1,1) primary key not null,
-	parent int not null,
-	children int not null,
-	foreign key(parent) references "Catalog"(id),
-	foreign key(children) references "Catalog"(id)
-);
-Go
-
-Create Table EnterpriseCatalog(
-	id int identity(1,1) primary key not null,
-	id_enterprise int not null,
-	id_catalog int not null,
-	foreign key(id_enterprise) references Enterprise(id),
-	foreign key(id_catalog) references "Catalog"(id)
-);
-
-Go
 select * from "User" where activation_code = '*My9uTtSoVSN RDT.!zF8LR08XocYd8rpEmp';
 --HIERARCHICAL QUERY
 
@@ -316,10 +314,10 @@ With starting as (
 		where t.parent = 1 and t.id_user = @idUser
 	),
 	descendants as (
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children.ruta
 		from starting t join  "Views" as children on children.id = t.children
 		union all 
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children.ruta
 		from UserView as t join descendants as d on t.parent = d.children join "Views" as children on children.id = t.children
 	)
 	delete from HierarchyView where children in( select children  from descendants where id in (select id_view from UserView where id_user = @idUser) group by id, children, parent, title);
@@ -333,6 +331,13 @@ Create or Alter Procedure RemoveHierarchyViewByUserNew(@idUser int)
 As
 begin
 	delete from UserView where id_user = @idUser;
+End
+Go
+
+Create or Alter Procedure RemoveCatalogHierarchyByEnterpriseNew(@idEnterprise int)
+As
+begin
+	delete from EnterpriseHierarchyCatalog where id_enterprise = @idEnterprise;
 End
 Go
 
@@ -415,6 +420,44 @@ With starting as (
 		select t.children as id, t.children, t.parent, c."name" as title
 		from UserView as t join ancestors as a on t.children = a.parent
 		join "Views" c on t.children = c.id
+	)
+	select id, children, parent, title  from descendants group by id, children, parent, title
+	union select * from ancestors group by id, children, parent, title;
+end
+Go
+
+insert into Catalog(code, description, name, status) values();
+go
+
+exec HierarchyCatalogByEnterpriseNew @idEnterprise = 1;
+
+exec HierarchyViewByUserNew @idUser = 3;
+
+Create or Alter Procedure HierarchyCatalogByEnterpriseNew(@idEnterprise int)
+As
+begin
+
+With starting as (
+		select t.children, t.parent
+		from EnterpriseHierarchyCatalog as t
+		where t.parent = 1 and t.id_enterprise = @idEnterprise
+	),
+	descendants as (
+		select t.children as id, t.children, t.parent, children."name" as title
+		from starting t join "Catalog" as children on children.id = t.children
+		union all 
+		select t.children as id, t.children, t.parent, children."name" as title
+		from EnterpriseHierarchyCatalog as t join descendants as d on t.parent = d.children join "Catalog" as children on children.id = t.children
+	),
+	ancestors as (
+		select t.children as id, t.children, t.parent, "Catalog"."name" as title
+		from EnterpriseHierarchyCatalog t
+		join "Catalog" on "Catalog".id = t.children
+		where t.children in ( select parent from starting )
+		union all
+		select t.children as id, t.children, t.parent, c."name" as title
+		from EnterpriseHierarchyCatalog as t join ancestors as a on t.children = a.parent
+		join "Catalog" c on t.children = c.id
 	)
 	select id, children, parent, title  from descendants group by id, children, parent, title
 	union select * from ancestors group by id, children, parent, title;

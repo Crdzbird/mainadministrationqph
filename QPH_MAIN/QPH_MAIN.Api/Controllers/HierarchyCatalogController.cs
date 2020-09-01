@@ -104,17 +104,15 @@ namespace QPH_MAIN.Api.Controllers
         /// Insert new hierarchy by user and catalog
         /// </summary>
         [Authorize]
-        [HttpPost("rebuildHierarchy")]
-        public async Task<IActionResult> Post([FromBody] HierarchyCatalogNewBuild hierarchyNewBuild)
+        [HttpPost("rebuildHierarchy/{enterpriseId}")]
+        public async Task<IActionResult> Post([FromBody] HierarchyCatalogNewBuild hierarchyNewBuild, int enterpriseId)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
-            string enterpriseId = User.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            int enterpriseIds = int.Parse(enterpriseId);
-            await _catalogService.DeleteHierarchyByEnterpriseId(enterpriseIds);
+            await _catalogService.DeleteHierarchyByEnterpriseId(enterpriseId);
             foreach (var tree in hierarchyNewBuild.Root)
             {
                 var _tree = _mapper.Map<CatalogTree>(tree);
-                await _catalogService.RebuildHierarchy(_tree, enterpriseIds);
+                await _catalogService.RebuildHierarchy(_tree, enterpriseId);
             }
             return Ok();
         }
