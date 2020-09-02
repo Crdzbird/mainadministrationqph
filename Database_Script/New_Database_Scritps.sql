@@ -10,12 +10,17 @@ Go
 Use RRHH_MAIN;
 Go
 DBCC CHECKIDENT(CATALOG, RESEED, 0);
+Go
 
-select * from enterprise
+Select 
+
+select * from "User"
 
 select * from Catalog;
 update Catalog set Catalog.id = 1 where code = 'root'
 delete from Catalog
+Go
+
 Create Table Country(
 	id int identity(1,1)primary key not null,
 	"name" varchar(100)not null unique
@@ -104,6 +109,7 @@ Create Table SystemParameters(
 	dataType varchar(100)not null,
 	status bit not null default 1
 );
+Go
 
 Create Table "User"(
 	id int identity(1,1) primary key not null,
@@ -143,11 +149,10 @@ Go
 Create Table "Views"(
 	id int identity(1,1) primary key not null,
 	code varchar(10) unique not null,
-	ruta varchar(300) not null,
+	"route" varchar(300) not null,
 	"name" varchar(50)not null default '',
 );
 Go
-
 
 /*Create Table HierarchyView(
 	id int identity(1,1) primary key not null,
@@ -195,41 +200,6 @@ Create Table "Permissions"(
 );
 Go
 
-insert into Cards("card") values ('A5'),('B25'),('C52'),('D52'),('E52'),('G52'),('F52'),('H52'),('I52');
-
-select * from "Views";
-
-select * from "Cards";
-
-exec HierarchyViewByUserNew @idUser=2
-
-insert into HierarchyView(parent, children) values (1,1);
-
-
-insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,7),(7,8),(8,9),(9,10),
-(10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
-
-
-INSERT INTO "Permissions"(permission) values ('reupload'),('read'),('update'),('download'),('delete'),('filter');
-
-Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(1,11),(1,20),(1,3),(1,12),(1,21);
-
-Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(1,2),(2,3),(2,4),(3,5),(4,6),(4,2),(4,4),(5,3),(6,1),(7,6),(8,2);
-
-
-select * from UserView;
-
-
-create or replace function win_cardsbyviewtrees_with_title(parm1 integer) returns TABLE(id_view integer, id_card integer, card text, title text)
-	language sql
-as $$
-Select v.id_view_principal,c.id_card, c.card, c.title from win_cards c
-  Inner Join win_view_card vco on vco.id_card = c.id_card
-  Inner Join win_views_principal v on v.id_view_principal = vco.id_view
-  WHERE v.id_view_principal = $1
-$$;
-Go
-
 Create Table Cards(
 	id int identity(1,1) primary key not null,
 	"card" varchar(40)not null unique
@@ -258,46 +228,55 @@ Create Table UserCardPermissions(
 	id int identity(1,1) primary key not null,
 	id_card_granted int not null,
 	id_permission int not null,
-	foreign key(id_card_granted)references UserCardGranted(id_card_granted),
+	foreign key(id_card_granted)references UserCardGranted(id),
 	foreign key(id_permission)references "Permissions"(id)
 );
 Go
 
-select * from "User" where activation_code = '*My9uTtSoVSN RDT.!zF8LR08XocYd8rpEmp';
---HIERARCHICAL QUERY
-
-exec HierarchyViewByParentId @parentId=14 order by children);
+insert into catalog(code,name,description,status) values
+('catalogo','Catalogo','Catalogo Descripcion',1),
+('comer','Comercios','Comercio Descripcion',1),
+('masivo','Masivos','Masivos Descripcion',1),
+('factura','Facturables','Facturables Descripcion',1),
+('prin','Principal','Principal Descripcion',1),
+('noRec','No Recurrente','noRecurrente Descripcion',1),
+('Rec','Recurrente','Recurrente Descripcion',1),
+('Ambient','Ambientes','Ambientes Descripcion',1),
+('nuevo','Nuevo','Nuevo Descripcion',1);
 Go
 
+insert into "User"(id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
+(1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
+Go
 
-select * from "User"
+insert into Cards("card") values ('A5'),('B25'),('C52'),('D52'),('E52'),('G52'),('F52'),('H52'),('I52');
+Go
 
+insert into HierarchyView(parent, children) values (1,1);
+Go
 
-select * from "User";
+insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,7),(7,8),(8,9),(9,10),
+(10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
+Go
+
+INSERT INTO "Permissions"(permission) values ('reupload'),('read'),('update'),('download'),('delete'),('filter');
+Go
+
+Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(1,11),(1,20),(1,3),(1,12),(1,21);
+Go
+
+Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(1,2),(2,3),(2,4),(3,5),(4,6),(4,2),(4,4),(5,3),(6,1),(7,6),(8,2);
+Go
 
 insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('padreB','padreB'),('hijoA','hijoA'),('hijoB','hijoB'),('hijoC','hijoC'),
 ('nietoA','nietoA'),('nietoB','nietoB'),('nietoC','nietoC'),('nietoD','nietoD'),('subNietoA','subNietoA'),('subNietoB','subNietoB');
 Go
 
-select * from UserView
-
-select * from "Views"
-
 insert into HierarchyView(parent, children) values (1,2),(1,3),(2,4),(2,5),(4,7),(3,6),(4,8),(5,9),(5,10),(10,11),(9,12);
 Go
 
-delete from UserView
-
 insert into UserView(id_user, parent, children) values(1,1,2),(1,1,3),(1,2,4),(1,2,5),(1,4,7),(1,3,6),(1,4,8),(1,5,9),(1,5,10),(1,10,11),(1,9,12);
 Go
-
-exec HierarchyViewByUser @idUser = 1 order by (select "orderBy" from UserView where id_user = 1);
-Go
-
-exec PermissionStatus @idUser = 1, @idView =3;
-
-
-
 
 Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
 As
@@ -307,7 +286,7 @@ inner join UserCardGranted ucg on ucg.id = ucp.id_card_granted
 inner join ViewCard vc on vc.id_card = ucg.id_card
 where ucp.id_permission = p.id and vc.id_view = @idView and ucg.id_user = @idUser)then 1 else 0 end) as status from "Permissions" p
 End;
-
+Go
 
 Create or Alter Procedure BuildCardsByView(@idView int)
 As
@@ -317,6 +296,7 @@ begin
 	inner join "Views" v on v.id = vc.id_view
 	where v.id = @idView
 end;
+Go
 
 Create or Alter Procedure RemoveHierarchyViewByUser(@idUser int)
 As
@@ -336,8 +316,6 @@ With starting as (
 	delete from HierarchyView where children in( select children  from descendants where id in (select id_view from UserView where id_user = @idUser) group by id, children, parent, title);
 End
 Go
-
-exec RemoveHierarchyViewByUserNew @idUser = 1
 
 
 Create or Alter Procedure RemoveHierarchyViewByUserNew(@idUser int)
@@ -362,9 +340,6 @@ begin
 End
 Go
 */
-select * from UserView
-
-delete from UserView
 
 /*Create or Alter Procedure HierarchyViewByUser(@idUser int)
 As
@@ -399,15 +374,6 @@ Go
 */
 
 
-exec HierarchyViewByUserNew @idUser = 2;
-
-select * from "User"
-
-select * from Views
-
-select * from UserView where id_user = 1 and parent =1
-delete from UserView where id = 163
-
 Create or Alter Procedure HierarchyViewByUserNew(@idUser int)
 As
 begin
@@ -439,13 +405,6 @@ With starting as (
 end
 Go
 
-insert into Catalog(code, description, name, status) values();
-go
-
-exec HierarchyCatalogByEnterpriseNew @idEnterprise = 1;
-
-exec HierarchyViewByUserNew @idUser = 3;
-
 Create or Alter Procedure HierarchyCatalogByEnterpriseNew(@idEnterprise int)
 As
 begin
@@ -476,19 +435,3 @@ With starting as (
 	union select * from ancestors group by id, children, parent, title;
 end
 Go
-
-
-exec PermissionStatus @idUser = 2, @idView =16;
-exec PermissionStatus @idUser = 2, @idView =3;
-
-select * from UserView where id_user = 2;
-
-
-select * from UserCardGranted where id_user = 2
-
-select * from ViewCard where id_view in(14,18,17,20,13);
-
-
-select * from UserCardGranted where id_user = 2
-
-select * from UserCardPermissions where id_card_granted in(select id from UserCardGranted where id_user = 2);
