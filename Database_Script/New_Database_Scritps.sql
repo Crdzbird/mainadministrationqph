@@ -245,6 +245,23 @@ insert into catalog(code,name,description,status) values
 ('nuevo','Nuevo','Nuevo Descripcion',1);
 Go
 
+insert into Roles(rolename, "status") values ('Administrador', 1);
+Go
+
+insert into Country("name") values ('Ecuador');
+Go
+
+insert into Region(id_country, "name") values (1, 'Ecuador');
+Go
+
+insert into City(id_region, "name") values (1, 'Ecuador');
+Go
+
+INSERT INTO [dbo].[Enterprise]([id_city],[commercial_name],[telephone],[email],[enterprise_address],[identification],[has_branches],[latitude],[longitude],[status]) VALUES
+(1,'Dummy','87654321','dummy@gmail.com','dummy Address','876532410D',0,1111,1111, 1);
+GO
+
+
 insert into "User"(id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
 (1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
 Go
@@ -373,7 +390,6 @@ end
 Go
 */
 
-
 Create or Alter Procedure HierarchyViewByUserNew(@idUser int)
 As
 begin
@@ -384,24 +400,24 @@ With starting as (
 		where t.parent = 1 and t.id_user = @idUser
 	),
 	descendants as (
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children."route"
 		from starting t join  "Views" as children on children.id = t.children
 		union all 
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children."route"
 		from UserView as t join descendants as d on t.parent = d.children join "Views" as children on children.id = t.children
 	),
 	ancestors as (
-		select t.children as id, t.children, t.parent, "Views"."name" as title
+		select t.children as id, t.children, t.parent, "Views"."name" as title, "Views"."route"
 		from UserView t
 		join "Views" on "Views".id = t.children
 		where t.children in ( select parent from starting )
 		union all
-		select t.children as id, t.children, t.parent, c."name" as title
+		select t.children as id, t.children, t.parent, c."name" as title, c."route"
 		from UserView as t join ancestors as a on t.children = a.parent
 		join "Views" c on t.children = c.id
 	)
-	select id, children, parent, title  from descendants group by id, children, parent, title
-	union select * from ancestors group by id, children, parent, title;
+	select id, children, parent, title, "route"  from descendants group by id, children, parent, title, "route"
+	union select * from ancestors group by id, children, parent, title, "route";
 end
 Go
 

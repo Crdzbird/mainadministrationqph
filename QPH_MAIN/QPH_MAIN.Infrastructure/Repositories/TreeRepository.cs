@@ -21,9 +21,9 @@ namespace QPH_MAIN.Infrastructure.Repositories
         {
             var result = await _entities.FromSqlRaw("exec HierarchyViewByUserNew @idUser={0}", userId).ToListAsync();
             if (result == null || result.Count == 0) return null;
-            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, 1 as children, id as Id from Views").FirstOrDefaultAsync();
+            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, '' as route, 1 as children, id as Id from Views").FirstOrDefaultAsync();
             result.Add(parentRoot);
-            Dictionary<int, Tree> dict = result.ToDictionary(loc => loc.son, loc => new Tree { son = loc.son, parent = loc.parent, title = loc.title, Id = loc.son });
+            Dictionary<int, Tree> dict = result.ToDictionary(loc => loc.son, loc => new Tree { son = loc.son, route = loc.route, parent = loc.parent, title = loc.title, Id = loc.son });
             foreach (Tree loc in dict.Values)
             {
                 var cards = await _context.Cards.FromSqlRaw("exec BuildCardsByView @idView={0}", loc.son).ToListAsync();

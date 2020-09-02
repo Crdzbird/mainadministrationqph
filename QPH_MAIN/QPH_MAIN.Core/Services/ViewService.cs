@@ -30,10 +30,15 @@ namespace QPH_MAIN.Core.Services
             {
                 views = views.Where(x => x.code.ToLower().Contains(filters.filter.ToLower()));
                 views = views.Where(x => x.name.ToLower().Contains(filters.filter.ToLower()));
+                views = views.Where(x => x.route.ToLower().Contains(filters.filter.ToLower()));
             }
             if (filters.Code != null)
             {
                 views = views.Where(x => x.code == filters.Code);
+            }
+            if (filters.Route != null)
+            {
+                views = views.Where(x => x.route == filters.Route);
             }
             if (filters.Name != null)
             {
@@ -61,6 +66,7 @@ namespace QPH_MAIN.Core.Services
             var existingView = await _unitOfWork.ViewRepository.GetById(views.Id);
             existingView.name = views.name;
             existingView.code = views.code;
+            existingView.route = views.route;
             _unitOfWork.ViewRepository.Update(existingView);
             await _unitOfWork.SaveChangesAsync();
             return true;

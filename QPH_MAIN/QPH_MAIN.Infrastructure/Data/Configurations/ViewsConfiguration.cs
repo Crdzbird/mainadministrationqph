@@ -27,6 +27,11 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
                 .HasColumnName("name")
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            builder.Property(e => e.route)
+                .IsRequired()
+                .HasColumnName("route")
+                .HasMaxLength(300);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace QPH_MAIN.Core.Entities
         }
         public string code { get; set; }
         public string name { get; set; }
+        public string route { get; set; }
         public virtual ICollection<UserView> userView { get; set; }
         public virtual ICollection<ViewCard> viewCard { get; set; }
     }

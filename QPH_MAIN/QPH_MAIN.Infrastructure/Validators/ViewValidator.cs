@@ -24,6 +24,10 @@ namespace QPH_MAIN.Infrastructure.Validators
                 .NotNull()
                 .WithMessage("El codigo de la vista no puede ser nulo");
 
+            RuleFor(view => view.Route)
+                .NotNull()
+                .WithMessage("La ruta de la vista no puede ser nulo");
+
             /*RuleFor(view => view.Code)
                 .Must(UniqueCode)
                 .WithMessage("El codigo ya existe");*/
