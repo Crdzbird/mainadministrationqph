@@ -122,11 +122,10 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Put(int id, CatalogDto CatalogDto)
+        public async Task<IActionResult> Put(int id, [FromBody] CatalogDto CatalogDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var catalog = _mapper.Map<Catalog>(CatalogDto);
-            catalog.Id = id;
             var result = await _catalogService.UpdateCatalog(catalog);
             var response = new ApiResponse<bool>(result);
             return Ok(response);

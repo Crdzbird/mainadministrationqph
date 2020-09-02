@@ -6,6 +6,7 @@ namespace QPH_MAIN.Core.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         ICityRepository CityRepository { get; }
+        ISystemParametersRepository SystemParametersRepository { get; }
         IRegionRepository RegionRepository { get; }
         ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }

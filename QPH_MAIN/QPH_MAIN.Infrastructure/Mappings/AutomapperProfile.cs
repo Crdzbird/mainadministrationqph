@@ -10,6 +10,8 @@ namespace QPH_MAIN.Infrastructure.Mappings
         {
             CreateMap<City, CityDto>();
             CreateMap<CityDto, City>();
+            CreateMap<SystemParametersDto, SystemParameters>();
+            CreateMap<SystemParameters, SystemParametersDto>();
             CreateMap<Region, RegionDto>();
             CreateMap<RegionDto, Region>();
             CreateMap<Country, CountryDto>();

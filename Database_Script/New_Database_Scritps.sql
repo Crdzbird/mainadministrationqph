@@ -92,6 +92,19 @@ Create Table Blacklist(
 );
 Go
 
+--REEMPLAZAR ELIMINACION POR ACTUALIZACION DE STATUS...
+--AGREGAR ENDPOINT PARA CONSTRUCCION DE ARBOL POR CODIGO SIN AGREGAR ELEMENTOS HERMANOS O PADRE...
+--Valores globales del sistema.
+--Codigo, descripcion, valor, tipo de dato, status bit
+--NO SE ASOCIAN A NADA.
+Create Table SystemParameters(
+	code varchar(20) primary key not null,
+	description varchar(200)not null,
+	"value" varchar(100)not null,
+	dataType varchar(100)not null,
+	status bit not null default 1
+);
+
 Create Table "User"(
 	id int identity(1,1) primary key not null,
 	id_role int not null,
