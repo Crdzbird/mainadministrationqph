@@ -21,7 +21,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         {
             var result = await _entities.FromSqlRaw("exec HierarchyViewByUserNew @idUser={0}", userId).ToListAsync();
             if (result == null || result.Count == 0) return null;
-            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, '' as route, 1 as children, id as Id from Views").FirstOrDefaultAsync();
+            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'root' as title, '' as route, 1 as children, id as Id from Views where code = 'root'").FirstOrDefaultAsync();
             result.Add(parentRoot);
             Dictionary<int, Tree> dict = result.ToDictionary(loc => loc.son, loc => new Tree { son = loc.son, route = loc.route, parent = loc.parent, title = loc.title, Id = loc.son });
             foreach (Tree loc in dict.Values)
@@ -47,7 +47,9 @@ namespace QPH_MAIN.Infrastructure.Repositories
                     parent.Children.Add(loc);
                 }
             }
-            Tree root = dict.Values.First(loc => loc.parent == loc.Id);
+            System.Diagnostics.Debugger.Break();
+            Tree root = dict.Values.First(loc => loc.parent == loc.Id); 
+            System.Diagnostics.Debugger.Break();
             return root;
         }
     }

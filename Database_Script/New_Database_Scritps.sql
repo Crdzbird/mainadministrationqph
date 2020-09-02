@@ -9,16 +9,8 @@ Go
 
 Use RRHH_MAIN;
 Go
-DBCC CHECKIDENT(CATALOG, RESEED, 0);
-Go
 
-Select 
-
-select * from "User"
-
-select * from Catalog;
-update Catalog set Catalog.id = 1 where code = 'root'
-delete from Catalog
+DBCC CHECKIDENT(EnterpriseHierarchyCatalog, RESEED, 0);
 Go
 
 Create Table Country(
@@ -67,8 +59,6 @@ Create Table Enterprise(
 );
 Go
 
---This table is used to store any numbers of contacts related to any enterprise
---NOTE: This table isn't related to the user table. however it can be linked via the email.
 Create Table EnterpriseContact(
 	id int identity(1,1) primary key not null,
 	id_enterprise int not null,
@@ -97,11 +87,6 @@ Create Table Blacklist(
 );
 Go
 
---REEMPLAZAR ELIMINACION POR ACTUALIZACION DE STATUS...
---AGREGAR ENDPOINT PARA CONSTRUCCION DE ARBOL POR CODIGO SIN AGREGAR ELEMENTOS HERMANOS O PADRE...
---Valores globales del sistema.
---Codigo, descripcion, valor, tipo de dato, status bit
---NO SE ASOCIAN A NADA.
 Create Table SystemParameters(
 	code varchar(20) primary key not null,
 	description varchar(200)not null,
@@ -261,38 +246,40 @@ INSERT INTO [dbo].[Enterprise]([id_city],[commercial_name],[telephone],[email],[
 (1,'Dummy','87654321','dummy@gmail.com','dummy Address','876532410D',0,1111,1111, 1);
 GO
 
-
-insert into "User"(id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
-(1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
+insert into "User"(google_access_token,facebook_access_token, firebase_token,id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
+('','','',1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
 Go
 
-insert into Cards("card") values ('A5'),('B25'),('C52'),('D52'),('E52'),('G52'),('F52'),('H52'),('I52');
+INSERT INTO "Permissions"(permission) values ('crear'),('actualizar'),('eliminar'),('ordenar');
 Go
 
-insert into HierarchyView(parent, children) values (1,1);
+insert into "Views"(code, "name", "route") values ('root','root', ''),('admin','Administracion','Administracion'),('usuario','Usuarios','Usuarios'),('menu','Vistas o Accesos del menu','Acceso del menu'),('rol','Roles','Roles'),('permiso','Permisos','Permisos'),
+('catalog','Catalogo','Catalogo'),('param','Parametrizacion','Parametrizacion');
 Go
 
-insert into ViewCard(id_view, id_card) values (2,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,7),(7,8),(8,9),(9,10),
-(10,11),(10,12),(11,13),(12,14),(12,15),(11,16),(7,17),(9,19),(3,18),(2,20);
+insert into Cards("card") values ('crearUsuario'),('actualizarUsuario'),('eliminarUsuario'),
+('crearVistas'),('actualizarVistas'),('eliminarVistas'),('ordenarVistas'),
+('crearRoles'),('actualizarRoles'),('eliminarRoles'),
+('crearPermisos'),('actualizarPermisos'),('eliminarPermisos'),
+('crearCatalogos'),('actualizarCatalogos'),('eliminarCatalogos'),
+('crearParametrizacion'),('actualizarParametrizacion'),('eliminarParametrizacion');
 Go
 
-INSERT INTO "Permissions"(permission) values ('reupload'),('read'),('update'),('download'),('delete'),('filter');
+insert into ViewCard(id_view, id_card) values (3,1),(3,2),(3,3),(4,4),(4,5),(4,6),(4,7),(5,8),(5,9),(5,10),
+(6,11),(6,12),(6,13),(7,14),(7,15),(7,16),(8,17),(8,18),(8,19);
 Go
 
-Insert into UserCardGranted(id_user, id_card) values (1,1),(1,10),(1,19),(1,2),(1,11),(1,20),(1,3),(1,12),(1,21);
+Insert into UserCardGranted(id_user, id_card) values (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19);
 Go
 
-Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(1,2),(2,3),(2,4),(3,5),(4,6),(4,2),(4,4),(5,3),(6,1),(7,6),(8,2);
+Insert into UserCardPermissions(id_card_granted, id_permission) values (1,1),(2,2),(3,3),(4,1),(5,2),(6,3),(7,4),(8,1),(9,2),(10,3),(11,1),(12,2),(13,3)
+,(14,1),(15,2),(16,3),(17,1),(18,2),(19,3);
 Go
 
-insert into "Views"(code, "name") values ('root','root'),('padreA','padreA'),('padreB','padreB'),('hijoA','hijoA'),('hijoB','hijoB'),('hijoC','hijoC'),
-('nietoA','nietoA'),('nietoB','nietoB'),('nietoC','nietoC'),('nietoD','nietoD'),('subNietoA','subNietoA'),('subNietoB','subNietoB');
+insert into UserView(id_user, parent, children) values(1,1,2),(1,2,3),(1,2,4),(1,2,5),(1,2,6),(1,2,7),(1,2,8);
 Go
 
-insert into HierarchyView(parent, children) values (1,2),(1,3),(2,4),(2,5),(4,7),(3,6),(4,8),(5,9),(5,10),(10,11),(9,12);
-Go
-
-insert into UserView(id_user, parent, children) values(1,1,2),(1,1,3),(1,2,4),(1,2,5),(1,4,7),(1,3,6),(1,4,8),(1,5,9),(1,5,10),(1,10,11),(1,9,12);
+insert into EnterpriseHierarchyCatalog(id_enterprise,parent,children)values(1,1,2),(1,2,3),(1,3,5),(1,2,4),(1,4,6),(1,4,7),(1,1,8),(1,8,9);
 Go
 
 Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
