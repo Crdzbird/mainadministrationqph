@@ -20,5 +20,11 @@ namespace QPH_MAIN.Core.Services
             var tree = await _unitOfWork.CatalogTreeRepository.GetCatalogTreeByEnterpriseId(enterpriseId);
             return tree;
         }
+
+        public async Task<CatalogTree> GetCatalogHierarchyByCode(int enterpriseId, string code)
+        {
+            var tree = await _unitOfWork.CatalogTreeRepository.GetCatalogHierarchyByCode(enterpriseId, code);
+            return tree;
+        }
     }
 }

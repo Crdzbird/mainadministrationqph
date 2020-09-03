@@ -17,6 +17,9 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
             builder.Property(e => e.title)
                 .HasColumnName("title");
 
+            builder.Property(e => e.code)
+                .HasColumnName("code");
+
             builder.HasNoKey().ToView(null);
         }
     }

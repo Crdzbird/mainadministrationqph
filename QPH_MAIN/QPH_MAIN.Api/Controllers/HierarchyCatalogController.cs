@@ -147,11 +147,11 @@ namespace QPH_MAIN.Api.Controllers
         /// Build HierarchyCatalog By Catalog Code
         /// </summary>
         [Authorize]
-        [HttpGet("buildHierarchyCatalogByEnterprise/{catalogCode}")]
+        [HttpGet("buildHierarchyByCodeAndEnterprise/{enterpriseId}/{catalogCode}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> ObtainTreeByCatalogCode(int catalogCode)
+        public async Task<IActionResult> ObtainTreeByCatalogCodeAndEnterprise(int enterpriseId, string catalogCode)
         {
-            return Ok(await _treeService.GetCatalogHierarchyTreeByEnterpriseId(catalogCode));
+            return Ok(await _treeService.GetCatalogHierarchyByCode(enterpriseId, catalogCode));
         }
 
         /// <summary>

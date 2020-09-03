@@ -438,3 +438,31 @@ With starting as (
 	union select * from ancestors group by id, children, parent, title, code;
 end
 Go
+
+Create or Alter Procedure RootCatalogByCodeEnterprise(@code varchar(50), @idEnterprise int)
+As
+begin
+select top 1 id, id as children, id as parent, name as title, code from Catalog where id = (
+	(select top 1 t.parent from EnterpriseHierarchyCatalog as t where t.parent = 
+		(select id from Catalog where code = @code) and t.id_enterprise = @idEnterprise)
+End
+Go
+
+Create or Alter Procedure HierarchyCatalogByCodeNew(@code varchar(50), @idEnterprise int)
+As
+begin
+With starting as (
+	select t.children, t.parent
+	from EnterpriseHierarchyCatalog as t
+	where t.parent = (select id from Catalog where code = @code) and t.id_enterprise = @idEnterprise
+	),
+	descendants as (
+		select t.children as id, t.children, t.parent, children."name" as title, children.code
+		from starting t join "Catalog" as children on children.id = t.children
+		union all 
+		select t.children as id, t.children, t.parent, children."name" as title, children.code
+		from EnterpriseHierarchyCatalog as t join descendants as d on t.parent = d.children join "Catalog" as children on children.id = t.children
+	)
+	select id, children, parent, title, code  from descendants group by id, children, parent, title, code;
+end
+Go
