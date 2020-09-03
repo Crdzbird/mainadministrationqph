@@ -29,11 +29,11 @@ namespace QPH_MAIN.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
 
-        public HierarchyCatalogController(ICatalogTreeService treeService, ICatalogService catalogService, IEnterpriseHierarchyCatalogService hierarchyViewService, IMapper mapper, IUriService uriService)
+        public HierarchyCatalogController(ICatalogTreeService treeService, ICatalogService catalogService, IEnterpriseHierarchyCatalogService hierarchyCatalogService, IMapper mapper, IUriService uriService)
         {
             _treeService = treeService;
             _catalogService = catalogService;
-            _enterpriseHierarchyCatalogService = hierarchyViewService;
+            _enterpriseHierarchyCatalogService = hierarchyCatalogService;
             _mapper = mapper;
             _uriService = uriService;
         }
@@ -122,17 +122,18 @@ namespace QPH_MAIN.Api.Controllers
         /// </summary>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Put(int id, [FromBody] CatalogDto CatalogDto)
+        public async Task<IActionResult> Put(int id, CatalogDto CatalogDto)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var catalog = _mapper.Map<Catalog>(CatalogDto);
+            catalog.Id = id;
             var result = await _catalogService.UpdateCatalog(catalog);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
 
         /// <summary>
-        /// Build HierarchyView By Enterprise Id
+        /// Build HierarchyCatalog By Enterprise Id
         /// </summary>
         [Authorize]
         [HttpGet("buildHierarchyCatalogByEnterprise/{enterpriseId}")]
@@ -140,6 +141,17 @@ namespace QPH_MAIN.Api.Controllers
         public async Task<IActionResult> ObtainTree(int enterpriseId)
         {
             return Ok(await _treeService.GetCatalogHierarchyTreeByEnterpriseId(enterpriseId));
+        }
+
+        /// <summary>
+        /// Build HierarchyCatalog By Catalog Code
+        /// </summary>
+        [Authorize]
+        [HttpGet("buildHierarchyCatalogByEnterprise/{catalogCode}")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ObtainTreeByCatalogCode(int catalogCode)
+        {
+            return Ok(await _treeService.GetCatalogHierarchyTreeByEnterpriseId(catalogCode));
         }
 
         /// <summary>

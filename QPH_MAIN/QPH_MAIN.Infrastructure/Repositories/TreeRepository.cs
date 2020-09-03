@@ -47,7 +47,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
                     parent.Children.Add(loc);
                 }
             }
-            Tree root = dict.Values.First(loc => loc.parent == loc.Id); ¡
+            Tree root = dict.Values.First(loc => loc.parent == loc.Id);
             return root;
         }
     }

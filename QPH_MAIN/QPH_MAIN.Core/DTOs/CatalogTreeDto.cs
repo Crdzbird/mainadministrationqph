@@ -13,6 +13,7 @@ namespace QPH_MAIN.Core.DTOs
         public int son { get; set; }
         public int parent { get; set; }
         public string title { get; set; }
+        public string code { get; set; }
         public List<CatalogTreeDto> Children { get; set; }
     }
 }

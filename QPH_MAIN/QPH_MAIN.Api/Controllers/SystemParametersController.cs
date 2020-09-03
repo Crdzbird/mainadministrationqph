@@ -38,7 +38,7 @@ namespace QPH_MAIN.Api.Controllers
         /// Retrieve systemParametersService by id
         /// </summary>
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("{code}")]
         public async Task<IActionResult> GetSystemParametersService(string code)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
@@ -82,7 +82,7 @@ namespace QPH_MAIN.Api.Controllers
         /// Remove systemParametersService by id
         /// </summary>
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("{code}")]
         public async Task<IActionResult> Delete(string code)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();

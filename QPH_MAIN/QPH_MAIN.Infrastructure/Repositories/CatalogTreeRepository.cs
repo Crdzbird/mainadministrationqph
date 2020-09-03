@@ -21,9 +21,9 @@ namespace QPH_MAIN.Infrastructure.Repositories
         {
             var result = await _entities.FromSqlRaw("exec HierarchyCatalogByEnterpriseNew @idEnterprise={0}", enterpriseId).ToListAsync();
             if (result == null || result.Count == 0) return null;
-            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'catalog' as title, 1 as children, id as Id from Catalog").FirstOrDefaultAsync();
+            var parentRoot = await _entities.FromSqlRaw("select top 1 id as parent, 'catalog' as title, 1 as children, id as Id, '' as code from Catalog where code = 'catalogo'").FirstOrDefaultAsync();
             result.Add(parentRoot);
-            Dictionary<int, CatalogTree> dict = result.ToDictionary(loc => loc.son, loc => new CatalogTree { son = loc.son, parent = loc.parent, title = loc.title, Id = loc.son });
+            Dictionary<int, CatalogTree> dict = result.ToDictionary(loc => loc.son, loc => new CatalogTree { son = loc.son, code = loc.code, parent = loc.parent, title = loc.title, Id = loc.son });
             foreach (CatalogTree loc in dict.Values)
             {
                 if (loc.parent != loc.Id)

@@ -11,6 +11,7 @@ namespace QPH_MAIN.Core.Entities
         public string title { get; set; }
         public int son { get; set; }
         public int parent { get; set; }
+        public string code { get; set; }
         public List<CatalogTree> Children { get; set; }
     }
 }

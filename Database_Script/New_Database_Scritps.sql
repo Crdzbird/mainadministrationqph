@@ -90,7 +90,7 @@ Go
 Create Table SystemParameters(
 	code varchar(20) primary key not null,
 	description varchar(200)not null,
-	"value" varchar(100)not null,
+	"value" varchar(max)not null,
 	dataType varchar(100)not null,
 	status bit not null default 1
 );
@@ -418,23 +418,23 @@ With starting as (
 		where t.parent = 1 and t.id_enterprise = @idEnterprise
 	),
 	descendants as (
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children.code
 		from starting t join "Catalog" as children on children.id = t.children
 		union all 
-		select t.children as id, t.children, t.parent, children."name" as title
+		select t.children as id, t.children, t.parent, children."name" as title, children.code
 		from EnterpriseHierarchyCatalog as t join descendants as d on t.parent = d.children join "Catalog" as children on children.id = t.children
 	),
 	ancestors as (
-		select t.children as id, t.children, t.parent, "Catalog"."name" as title
+		select t.children as id, t.children, t.parent, "Catalog"."name" as title, "Catalog".code
 		from EnterpriseHierarchyCatalog t
 		join "Catalog" on "Catalog".id = t.children
 		where t.children in ( select parent from starting )
 		union all
-		select t.children as id, t.children, t.parent, c."name" as title
+		select t.children as id, t.children, t.parent, c."name" as title, c.code
 		from EnterpriseHierarchyCatalog as t join ancestors as a on t.children = a.parent
 		join "Catalog" c on t.children = c.id
 	)
-	select id, children, parent, title  from descendants group by id, children, parent, title
-	union select * from ancestors group by id, children, parent, title;
+	select id, children, parent, title, code  from descendants group by id, children, parent, title, code
+	union select * from ancestors group by id, children, parent, title, code;
 end
 Go
