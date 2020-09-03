@@ -46,10 +46,8 @@ namespace QPH_MAIN.Infrastructure.Repositories
                     Tree parent = dict[loc.parent];
                     parent.Children.Add(loc);
                 }
-            }
-            System.Diagnostics.Debugger.Break();
-            Tree root = dict.Values.First(loc => loc.parent == loc.Id); 
-            System.Diagnostics.Debugger.Break();
+            }¡
+            Tree root = dict.Values.First(loc => loc.parent == loc.Id); ¡
             return root;
         }
     }
