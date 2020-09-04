@@ -171,22 +171,16 @@ namespace QPH_MAIN.Api.Controllers
             return Ok(response);
         }
 
+        //Colocar en repositorio IUnitOfWork
         private async Task<(bool, User)> IsValidUser(UserLogin login)
         {
-            try
-            {
-                var user = await _userService.GetLoginByCredentials(login);
-                if (user == null) return (false, null);
-                var isValid = _passwordService.Check(user.hashPassword, login.Password);
-                return (isValid, user);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
+            var user = await _userService.GetLoginByCredentials(login);
+            if (user == null) return (false, null);
+            var isValid = _passwordService.Check(user.hashPassword, login.Password);
+            return (isValid, user);
         }
 
+        //Colocar en repositorio IUnitOfWork
         private string GenerateToken(User user)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:SecretKey"]));
