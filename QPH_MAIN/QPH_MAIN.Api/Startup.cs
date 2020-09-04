@@ -86,11 +86,15 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
-                options.RoutePrefix = string.Empty;
-            });
+
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
+            //app.UseSwaggerUI(options =>
+            //{
+            //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
+            //    options.RoutePrefix = string.Empty;
+            //});
+
+
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
             {

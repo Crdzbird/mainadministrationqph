@@ -173,10 +173,18 @@ namespace QPH_MAIN.Api.Controllers
 
         private async Task<(bool, User)> IsValidUser(UserLogin login)
         {
-            var user = await _userService.GetLoginByCredentials(login);
-            if (user == null) return (false, null);
-            var isValid = _passwordService.Check(user.hashPassword, login.Password);
-            return (isValid, user);
+            try
+            {
+                var user = await _userService.GetLoginByCredentials(login);
+                if (user == null) return (false, null);
+                var isValid = _passwordService.Check(user.hashPassword, login.Password);
+                return (isValid, user);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
         }
 
         private string GenerateToken(User user)
