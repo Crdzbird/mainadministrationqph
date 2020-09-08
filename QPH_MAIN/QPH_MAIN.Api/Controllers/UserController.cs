@@ -171,7 +171,6 @@ namespace QPH_MAIN.Api.Controllers
             return Ok(response);
         }
 
-        //Colocar en repositorio IUnitOfWork
         private async Task<(bool, User)> IsValidUser(UserLogin login)
         {
             var user = await _userService.GetLoginByCredentials(login);
@@ -180,7 +179,6 @@ namespace QPH_MAIN.Api.Controllers
             return (isValid, user);
         }
 
-        //Colocar en repositorio IUnitOfWork
         private string GenerateToken(User user)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:SecretKey"]));

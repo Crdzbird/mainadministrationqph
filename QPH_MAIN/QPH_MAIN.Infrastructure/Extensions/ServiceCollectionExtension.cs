@@ -44,6 +44,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<IEnterpriseService, EnterpriseService>();
             services.AddTransient<IUserViewService, HierarchyViewService>();
             services.AddTransient<IEnterpriseHierarchyCatalogService, CatalogHierarchyViewService>();
+            services.AddTransient<ITableColumnService, TableColumnService>();
             services.AddTransient<IPermissionsService, PermissionsService>();
             services.AddTransient<IRegionService, RegionService>();
             services.AddTransient<IRolesService, RolesService>();

@@ -17,6 +17,7 @@ namespace QPH_MAIN.Core.Interfaces
         ICatalogRepository CatalogRepository { get; }
         IViewCardRepository ViewCardRepository { get; }
         IUserViewRepository UserViewRepository { get; }
+        ITableColumnRepository TableColumnRepository { get; }
         IEnterpriseHierarchyCatalogRepository EnterpriseHierarchyCatalogRepository { get; }
         ITreeRepository TreeRepository { get; }
         ICatalogTreeRepository CatalogTreeRepository { get; }

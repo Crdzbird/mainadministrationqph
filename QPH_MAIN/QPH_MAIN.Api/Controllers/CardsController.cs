@@ -42,7 +42,7 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet(Name = nameof(GetCards))]
-        public IActionResult GetCards([FromQuery]CardsQueryFilter filters)
+        public IActionResult GetCards([FromBody]CardsQueryFilter filters)
         {
             var cards = _cardsService.GetCards(filters);
             var citiesDto = _mapper.Map<IEnumerable<CardsDto>>(cards);

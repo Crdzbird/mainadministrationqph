@@ -25,6 +25,9 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
+            builder.Property(e => e.name_application)
+                .HasColumnName("name_application");
+
             builder.Property(e => e.telephone)
                 .IsRequired()
                 .HasColumnName("telephone")

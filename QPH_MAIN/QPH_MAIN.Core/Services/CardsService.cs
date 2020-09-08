@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
+using OrderByExtensions;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +36,13 @@ namespace QPH_MAIN.Core.Services
             if (filters.Card != null)
             {
                 cards = cards.Where(x => x.card.ToLower().Contains(filters.Card.ToLower()));
+            }
+            if (filters.orderedBy != null && filters.orderedBy.Count() > 0)
+            {
+                foreach (var sortM in filters.orderedBy)
+                {
+                    cards = cards.OrderBy(sortM.PairAsSqlExpression);
+                }
             }
             var pagedPosts = PagedList<Cards>.Create(cards, filters.PageNumber, filters.PageSize);
             return pagedPosts;

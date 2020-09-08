@@ -9,6 +9,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly QPHContext _context;
         private readonly ICityRepository _cityRepository;
         private readonly ISystemParametersRepository _systemParametersRepository;
+        private readonly ITableColumnRepository _tableColumnRepository;
         private readonly ICardsRepository _cardsRepository;
         private readonly IRegionRepository _regionRepository;
         private readonly ICountryRepository _countryRepository;
@@ -32,6 +33,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         }
 
         public ICityRepository CityRepository => _cityRepository ?? new CityRepository(_context);
+        public ITableColumnRepository TableColumnRepository => _tableColumnRepository ?? new TableColumnRepository(_context);
         public ISystemParametersRepository SystemParametersRepository => _systemParametersRepository ?? new SystemParametersRepository(_context);
         public ICardsRepository CardsRepository => _cardsRepository ?? new CardsRepository(_context);
         public IRegionRepository RegionRepository => _regionRepository ?? new RegionRepository(_context);

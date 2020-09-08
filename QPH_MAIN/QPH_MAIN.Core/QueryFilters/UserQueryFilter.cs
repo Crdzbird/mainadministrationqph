@@ -1,4 +1,6 @@
-﻿namespace QPH_MAIN.Core.QueryFilters
+﻿using System.Collections.Generic;
+
+namespace QPH_MAIN.Core.QueryFilters
 {
     public class UserQueryFilter
     {
@@ -12,5 +14,6 @@
         public bool? Status { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public List<SortModel> SortModels { get; set; }
     }
 }

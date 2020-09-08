@@ -41,6 +41,12 @@ namespace QPH_MAIN.Api
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             })
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             .ConfigureApiBehaviorOptions(options =>
             {
                 //options.SuppressModelStateInvalidFilter = true;
@@ -86,16 +92,11 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-            
-            //General for IIS
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
-            //app.UseSwaggerUI(options =>
-            //{
-            //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
-            //    options.RoutePrefix = string.Empty;
-            //});
-
-
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
+                options.RoutePrefix = string.Empty;
+            });
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
             {

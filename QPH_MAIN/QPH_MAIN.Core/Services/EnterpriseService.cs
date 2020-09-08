@@ -31,11 +31,16 @@ namespace QPH_MAIN.Core.Services
             {
                 enterprises = enterprises.Where(x => x.commercial_name.ToLower().Contains(filters.filter.ToLower()));
                 enterprises = enterprises.Where(x => x.enterprise_address.ToLower().Contains(filters.enterprise_address.ToLower()));
+                enterprises = enterprises.Where(x => x.name_application.ToLower().Contains(filters.name_application.ToLower()));
             }
             if (filters.id_city != null)
             {
                 enterprises = enterprises.Where(x => x.id_city == filters.id_city);
             }
+            if (filters.name_application != null)
+            {
+                enterprises = enterprises.Where(x => x.name_application == filters.name_application);
+            }    
             if (filters.commercial_name != null)
             {
                 enterprises = enterprises.Where(x => x.commercial_name.ToLower().Contains(filters.commercial_name.ToLower()));
@@ -43,6 +48,10 @@ namespace QPH_MAIN.Core.Services
             if (filters.enterprise_address != null)
             {
                 enterprises = enterprises.Where(x => x.enterprise_address.ToLower().Contains(filters.enterprise_address.ToLower()));
+            }
+            if (filters.name_application != null)
+            {
+                enterprises = enterprises.Where(x => x.name_application.ToLower().Contains(filters.name_application.ToLower()));
             }
 
             var pagedPosts = PagedList<Enterprise>.Create(enterprises, filters.PageNumber, filters.PageSize);
@@ -67,6 +76,7 @@ namespace QPH_MAIN.Core.Services
             existingEnterprise.id_city = enterprise.id_city;
             existingEnterprise.telephone = enterprise.telephone;
             existingEnterprise.email = enterprise.email;
+            existingEnterprise.name_application = enterprise.name_application;
             existingEnterprise.enterprise_address = enterprise.enterprise_address;
             existingEnterprise.identification = enterprise.identification;
             existingEnterprise.has_branches = enterprise.has_branches;

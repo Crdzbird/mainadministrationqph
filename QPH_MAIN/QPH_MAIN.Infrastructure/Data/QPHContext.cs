@@ -11,6 +11,7 @@ namespace QPH_MAIN.Infrastructure.Data
         public QPHContext(DbContextOptions<QPHContext> options) : base(options) {}
         public virtual DbSet<City> City { get; set; }
         public virtual DbSet<SystemParameters> SystemParameters { get; set; }
+        public virtual DbSet<TableColumn> TableColumn { get; set; }
         public virtual DbSet<Views> Views { get; set; }
         public virtual DbSet<Cards> Cards { get; set; }
         public virtual DbSet<ViewCard> ViewCards { get; set; }
@@ -33,6 +34,7 @@ namespace QPH_MAIN.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<TableColumn>().HasNoKey().ToView(null);
             modelBuilder.Entity<Tree>().HasNoKey().ToView(null);
             modelBuilder.Entity<CatalogTree>().HasNoKey().ToView(null);
             modelBuilder.Entity<PermissionStatus>().HasNoKey().ToView(null);
