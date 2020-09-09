@@ -25,9 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\QPH_MAIN.Core\QPH_MAIN.Core.csproj" />
     <ProjectReference Include="..\QPH_MAIN.Infrastructure\QPH_MAIN.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderByExtension\OrderByExtension.csproj" />
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

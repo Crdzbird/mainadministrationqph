@@ -15,6 +15,14 @@ namespace QPH_MAIN.Infrastructure.Validators
                 .Length(1, 100)
                 .WithMessage("La longitud del nombre comomercial debe estar entre 1 y 100 caracteres");
 
+            RuleFor(e => e.name_application)
+               .NotNull()
+               .WithMessage("El nombre de aplicacion no puede ser nulo");
+
+            RuleFor(enterprise => enterprise.name_application)
+                .Length(1, 300)
+                .WithMessage("La longitud del nombre de aplicacion debe estar entre 1 y 300");
+
             RuleFor(e => e.telephone)
                .NotNull()
                .WithMessage("El telefono no puede ser nulo");

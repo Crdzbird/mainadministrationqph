@@ -38,8 +38,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetCountries))]
-        public IActionResult GetCountries([FromQuery]CountryQueryFilter filters)
+        [HttpPost("RerieveCountries")]
+        public IActionResult GetCountries([FromBody] CountryQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var countries = _countryService.GetCountries(filters);

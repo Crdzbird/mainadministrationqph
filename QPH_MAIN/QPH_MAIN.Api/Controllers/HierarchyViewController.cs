@@ -48,10 +48,10 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetViews))]
+        [HttpPost("RetrieveViews")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<IEnumerable<ViewsDto>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult GetViews([FromQuery]ViewQueryFilter filters)
+        public IActionResult GetViews([FromBody] ViewQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var views = _viewService.GetViews(filters);

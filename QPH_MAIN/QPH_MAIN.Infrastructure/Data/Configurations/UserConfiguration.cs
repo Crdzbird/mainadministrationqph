@@ -28,6 +28,12 @@ namespace QPH_MAIN.Infrastructure.Data.Configurations
                 .IsRequired()
                 .HasColumnName("nickname");
 
+            builder.Property(e => e.firstName)
+                .HasColumnName("firstName");
+
+            builder.Property(e => e.lastName)
+                .HasColumnName("lastName");
+
             builder.Property(e => e.activation_code)
                 .HasColumnName("activation_code");
 

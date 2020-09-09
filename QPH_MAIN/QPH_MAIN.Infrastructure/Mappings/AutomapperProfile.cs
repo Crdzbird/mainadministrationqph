@@ -22,8 +22,12 @@ namespace QPH_MAIN.Infrastructure.Mappings
             CreateMap<ViewsDto, Views>();
             CreateMap<Catalog, CatalogDto>();
             CreateMap<CatalogDto, Catalog>();
+            CreateMap<Blacklist, BlacklistDto>();
+            CreateMap<BlacklistDto, Blacklist>();
             CreateMap<Tree, TreeDto>();
             CreateMap<TreeDto, Tree>();
+            CreateMap<TableColumn, TableColumnDto>();
+            CreateMap<TableColumnDto, TableColumn>();
             CreateMap<CatalogTree, CatalogTreeDto>();
             CreateMap<CatalogTreeDto, CatalogTree>();
             CreateMap<UserView, UserViewDto>();
