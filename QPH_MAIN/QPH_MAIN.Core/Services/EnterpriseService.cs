@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using OrderByExtensions;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Exceptions;
@@ -53,7 +54,13 @@ namespace QPH_MAIN.Core.Services
             {
                 enterprises = enterprises.Where(x => x.name_application.ToLower().Contains(filters.name_application.ToLower()));
             }
-
+            if (filters.orderedBy != null && filters.orderedBy.Count() > 0)
+            {
+                foreach (var sortM in filters.orderedBy)
+                {
+                    enterprises = enterprises.OrderBy(sortM.PairAsSqlExpression);
+                }
+            }
             var pagedPosts = PagedList<Enterprise>.Create(enterprises, filters.PageNumber, filters.PageSize);
             return pagedPosts;
         }

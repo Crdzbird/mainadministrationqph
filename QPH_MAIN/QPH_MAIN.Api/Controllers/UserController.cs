@@ -50,8 +50,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         /// 
         [Authorize]
-        [HttpGet(Name = nameof(GetUsers))]
-        public IActionResult GetUsers([FromQuery] UserQueryFilter filters)
+        [HttpPost("RetrieveUsers")]
+        public IActionResult GetUsers([FromBody] UserQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var users = _userService.GetUsers(filters);

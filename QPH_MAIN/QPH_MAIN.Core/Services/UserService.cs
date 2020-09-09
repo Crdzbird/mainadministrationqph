@@ -12,6 +12,7 @@ using QPH_MAIN.Core.Exceptions;
 using QPH_MAIN.Core.Interfaces;
 using QPH_MAIN.Core.QueryFilters;
 using QPH_MAIN.Core.DTOs;
+using OrderByExtensions;
 
 namespace QPH_MAIN.Core.Services
 {
@@ -37,6 +38,8 @@ namespace QPH_MAIN.Core.Services
                 users = users.Where(x => x.nickname.ToLower().Contains(filters.filter.ToLower()));
                 users = users.Where(x => x.email.ToLower().Contains(filters.filter.ToLower()));
                 users = users.Where(x => x.phone_number.ToLower().Contains(filters.filter.ToLower()));
+                users = users.Where(x => x.firstName.ToLower().Contains(filters.filter.ToLower()));
+                users = users.Where(x => x.lastName.ToLower().Contains(filters.filter.ToLower()));
             }
             if (filters.CountryId != null)
             {
@@ -53,6 +56,14 @@ namespace QPH_MAIN.Core.Services
             if (filters.Nickname != null)
             {
                 users = users.Where(x => x.nickname.ToLower().Contains(filters.Nickname.ToLower()));
+            }
+            if (filters.FirstName != null)
+            {
+                users = users.Where(x => x.firstName == filters.FirstName);
+            }
+            if (filters.LastName != null)
+            {
+                users = users.Where(x => x.lastName == filters.LastName);
             }
             if (filters.Email != null)
             {
@@ -77,6 +88,13 @@ namespace QPH_MAIN.Core.Services
             if (filters.CountryId != null)
             {
                 users = users.Where(x => x.id_country == filters.CountryId);
+            }
+            if (filters.orderedBy != null && filters.orderedBy.Count() > 0)
+            {
+                foreach (var sortM in filters.orderedBy)
+                {
+                    users = users.OrderBy(sortM.PairAsSqlExpression);
+                }
             }
             var pagedPosts = PagedList<User>.Create(users, filters.PageNumber, filters.PageSize);
             return pagedPosts;
@@ -117,6 +135,8 @@ namespace QPH_MAIN.Core.Services
             existingUser.id_enterprise = user.id_enterprise;
             existingUser.id_country = user.id_country;
             existingUser.nickname = user.nickname;
+            existingUser.firstName = user.firstName;
+            existingUser.lastName = user.lastName;
             existingUser.email = user.email;
             existingUser.phone_number = user.phone_number;
             existingUser.hashPassword = user.hashPassword;

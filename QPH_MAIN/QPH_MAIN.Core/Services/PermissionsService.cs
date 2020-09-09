@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using OrderByExtensions;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Exceptions;
@@ -34,6 +35,13 @@ namespace QPH_MAIN.Core.Services
             if(filters.Name != null)
             {
                 permissions = permissions.Where(x => x.permission == filters.Name);
+            }
+            if (filters.orderedBy != null && filters.orderedBy.Count() > 0)
+            {
+                foreach (var sortM in filters.orderedBy)
+                {
+                    permissions = permissions.OrderBy(sortM.PairAsSqlExpression);
+                }
             }
             var pagedPosts = PagedList<Permissions>.Create(permissions, filters.PageNumber, filters.PageSize);
             return pagedPosts;

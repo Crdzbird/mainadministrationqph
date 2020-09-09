@@ -26,6 +26,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly IRolesRepository _rolesRepository;
         private readonly IEnterpriseRepository _enterpriseRepository;
         private readonly IPermissionsRepository _permissionsRepository;
+        private readonly IBlacklistRepository _blacklistRepository;
 
         public UnitOfWork(QPHContext context)
         {
@@ -51,6 +52,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         public IUserViewRepository UserViewRepository => _userViewRepository ?? new UserViewRepository(_context);
         public IEnterpriseRepository EnterpriseRepository => _enterpriseRepository ?? new EnterpriseRepository(_context);
         public IPermissionsRepository PermissionsRepository => _permissionsRepository ?? new PermissionsRepository(_context);
+        public IBlacklistRepository BlacklistRepository => _blacklistRepository ?? new BlacklistRepository(_context);
 
         public void Dispose()
         {

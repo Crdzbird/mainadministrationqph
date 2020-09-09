@@ -13,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using QPH_MAIN.Infrastructure.Extensions;
 using QPH_MAIN.Infrastructure.Filters;
-using Swashbuckle.Swagger;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -38,19 +37,15 @@ namespace QPH_MAIN.Api
                 options.Filters.Add<GlobalExceptionFilter>();
             }).AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-            })
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
-            .ConfigureApiBehaviorOptions(options =>
-            {
-                //options.SuppressModelStateInvalidFilter = true;
-            });
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
             services.AddServices();

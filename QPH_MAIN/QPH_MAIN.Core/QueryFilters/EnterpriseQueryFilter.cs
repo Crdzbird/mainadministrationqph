@@ -11,6 +11,6 @@ namespace QPH_MAIN.Core.QueryFilters
         public string enterprise_address { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
-        public List<SortModel> SortModels { get; set; }
+        public List<SortModel> orderedBy { get; set; }
     }
 }

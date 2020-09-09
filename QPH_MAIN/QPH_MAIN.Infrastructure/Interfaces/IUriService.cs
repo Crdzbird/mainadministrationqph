@@ -8,6 +8,7 @@ namespace QPH_MAIN.Infrastructure.Interfaces
         Uri GetActivationUri(string actionUrl);
         Uri GetPostPaginationUri(CityQueryFilter filter, string actionUrl);
         Uri GetPostPaginationUri(ViewQueryFilter filter, string actionUrl);
+        Uri GetPostPaginationUri(BlacklistQueryFilter fliter, string actionUrl);
         Uri GetPostPaginationUri(CatalogQueryFilter filter, string actionUrl);
         Uri GetPostPaginationUri(RegionQueryFilter filter, string actionUrl);
         Uri GetPostPaginationUri(CountryQueryFilter filter, string actionUrl);

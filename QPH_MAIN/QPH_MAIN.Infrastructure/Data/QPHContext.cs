@@ -13,6 +13,7 @@ namespace QPH_MAIN.Infrastructure.Data
         public virtual DbSet<SystemParameters> SystemParameters { get; set; }
         public virtual DbSet<TableColumn> TableColumn { get; set; }
         public virtual DbSet<Views> Views { get; set; }
+        public virtual DbSet<Blacklist> Blacklist { get; set; }
         public virtual DbSet<Cards> Cards { get; set; }
         public virtual DbSet<ViewCard> ViewCards { get; set; }
         public virtual DbSet<UserView> HierarchyView { get; set; }

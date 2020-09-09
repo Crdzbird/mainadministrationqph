@@ -37,8 +37,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetRoles))]
-        public IActionResult GetRoles([FromQuery] RolesQueryFilter filters)
+        [HttpPost("RetrieveRoles")]
+        public IActionResult GetRoles([FromBody] RolesQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var roles = _roleService.GetRoles(filters);
