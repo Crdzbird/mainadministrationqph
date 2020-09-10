@@ -9,7 +9,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
     public class EnterpriseRepository : BaseRepository<Enterprise>, IEnterpriseRepository
     {
         public EnterpriseRepository(QPHContext context) : base(context) { }
-        public async Task<Enterprise> GetByName(string name) => await _entities.FirstOrDefaultAsync(x => x.commercial_name == name);
+        public async Task<Enterprise> GetByName(string name) => await _entities.FirstOrDefaultAsync(x => x.commercial_name.ToLower() == name.ToLower());
 
     }
 }
