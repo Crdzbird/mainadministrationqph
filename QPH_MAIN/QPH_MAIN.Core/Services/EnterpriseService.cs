@@ -23,6 +23,8 @@ namespace QPH_MAIN.Core.Services
 
         public async Task<Enterprise> GetEnterprise(int id) => await _unitOfWork.EnterpriseRepository.GetById(id);
 
+        public async Task<Enterprise> GetEnterpriseByName(string name) => await _unitOfWork.EnterpriseRepository.GetByName(name);
+
         public PagedList<Enterprise> GetEnterprises(EnterpriseQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;

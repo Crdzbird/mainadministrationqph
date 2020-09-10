@@ -9,6 +9,7 @@ namespace QPH_MAIN.Core.Interfaces
     {
         PagedList<Enterprise> GetEnterprises(EnterpriseQueryFilter filters);
         Task<Enterprise> GetEnterprise(int id);
+        Task<Enterprise> GetEnterpriseByName(string name);
         Task InsertEnterprise(Enterprise enterprise);
         Task<bool> UpdateEnterprise(Enterprise enterprise);
         Task<bool> DeleteEnterprise(int id);

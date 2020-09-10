@@ -40,8 +40,6 @@ namespace QPH_MAIN.Api
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
-
-            //Solve enable cors *
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -49,7 +47,7 @@ namespace QPH_MAIN.Api
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
-
+            services.AddRouting(Configuration);
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
             services.AddServices();
@@ -91,19 +89,18 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-
-            app.UseCors("MyPolicy");
-
-            //General for IIS /swagger exact path
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
-
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
+                options.RoutePrefix = string.Empty;
+            });
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
             {
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 var exception = exceptionHandlerPathFeature.Error;
 
-                var result = JsonConvert.SerializeObject(new { error = exception.Message });
+                var result = JsonConvert.SerializeObject(new { error = exception.Message});
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(result);
             }));

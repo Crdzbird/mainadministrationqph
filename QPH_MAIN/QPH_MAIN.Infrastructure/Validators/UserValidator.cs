@@ -14,15 +14,11 @@ namespace QPH_MAIN.Infrastructure.Validators
             RuleFor(user => user.email)
                 .EmailAddress()
                 .NotNull()
-                .WithMessage("El nickname de usuario no puede ser nulo");
+                .WithMessage("El email de usuario no puede ser nulo");
 
             RuleFor(user => user.hashPassword)
                 .NotNull()
                 .WithMessage("El password de usuario no puede ser nulo");
-
-            RuleFor(user => user.phone_number)
-                .NotNull()
-                .WithMessage("El numero de telefono no puede ser nulo");
         }
     }
 }
