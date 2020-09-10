@@ -41,8 +41,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetPermissions))]
-        public IActionResult GetPermissions([FromQuery]PermissionsQueryFilter filters)
+        [HttpPost("RetrievePermissions")]
+        public IActionResult GetPermissions([FromBody] PermissionsQueryFilter filters)
         {
             var Permissions = _permissionsService.GetPermissions(filters);
             var permissionsDto = _mapper.Map<IEnumerable<PermissionsDto>>(Permissions);

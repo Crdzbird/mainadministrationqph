@@ -50,8 +50,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <returns></returns>
         /// 
         [Authorize]
-        [HttpGet(Name = nameof(GetUsers))]
-        public IActionResult GetUsers([FromQuery] UserQueryFilter filters)
+        [HttpPost("RetrieveUsers")]
+        public IActionResult GetUsers([FromBody] UserQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var users = _userService.GetUsers(filters);
@@ -171,7 +171,6 @@ namespace QPH_MAIN.Api.Controllers
             return Ok(response);
         }
 
-        //Colocar en repositorio IUnitOfWork
         private async Task<(bool, User)> IsValidUser(UserLogin login)
         {
             var user = await _userService.GetLoginByCredentials(login);
@@ -180,7 +179,6 @@ namespace QPH_MAIN.Api.Controllers
             return (isValid, user);
         }
 
-        //Colocar en repositorio IUnitOfWork
         private string GenerateToken(User user)
         {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:SecretKey"]));

@@ -41,8 +41,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetCities))]
-        public IActionResult GetCities([FromQuery]CityQueryFilter filters)
+        [HttpPost("RetrieveCities")]
+        public IActionResult GetCities([FromBody] CityQueryFilter filters)
         {
             var cities = _cityService.GetCities(filters);
             var citiesDto = _mapper.Map<IEnumerable<CityDto>>(cities);

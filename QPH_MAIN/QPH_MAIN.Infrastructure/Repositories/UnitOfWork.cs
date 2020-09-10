@@ -9,6 +9,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly QPHContext _context;
         private readonly ICityRepository _cityRepository;
         private readonly ISystemParametersRepository _systemParametersRepository;
+        private readonly ITableColumnRepository _tableColumnRepository;
         private readonly ICardsRepository _cardsRepository;
         private readonly IRegionRepository _regionRepository;
         private readonly ICountryRepository _countryRepository;
@@ -25,6 +26,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         private readonly IRolesRepository _rolesRepository;
         private readonly IEnterpriseRepository _enterpriseRepository;
         private readonly IPermissionsRepository _permissionsRepository;
+        private readonly IBlacklistRepository _blacklistRepository;
 
         public UnitOfWork(QPHContext context)
         {
@@ -32,6 +34,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         }
 
         public ICityRepository CityRepository => _cityRepository ?? new CityRepository(_context);
+        public ITableColumnRepository TableColumnRepository => _tableColumnRepository ?? new TableColumnRepository(_context);
         public ISystemParametersRepository SystemParametersRepository => _systemParametersRepository ?? new SystemParametersRepository(_context);
         public ICardsRepository CardsRepository => _cardsRepository ?? new CardsRepository(_context);
         public IRegionRepository RegionRepository => _regionRepository ?? new RegionRepository(_context);
@@ -49,6 +52,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         public IUserViewRepository UserViewRepository => _userViewRepository ?? new UserViewRepository(_context);
         public IEnterpriseRepository EnterpriseRepository => _enterpriseRepository ?? new EnterpriseRepository(_context);
         public IPermissionsRepository PermissionsRepository => _permissionsRepository ?? new PermissionsRepository(_context);
+        public IBlacklistRepository BlacklistRepository => _blacklistRepository ?? new BlacklistRepository(_context);
 
         public void Dispose()
         {

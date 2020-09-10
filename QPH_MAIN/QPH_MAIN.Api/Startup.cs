@@ -13,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using QPH_MAIN.Infrastructure.Extensions;
 using QPH_MAIN.Infrastructure.Filters;
-using Swashbuckle.Swagger;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -38,13 +37,15 @@ namespace QPH_MAIN.Api
                 options.Filters.Add<GlobalExceptionFilter>();
             }).AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-            })
-            .ConfigureApiBehaviorOptions(options =>
-            {
-                //options.SuppressModelStateInvalidFilter = true;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
             services.AddServices();
@@ -72,13 +73,6 @@ namespace QPH_MAIN.Api
                 };
             });
 
-            // services.AddCors();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000"));
-            });
-
             services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
@@ -93,12 +87,7 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-
-            app.UseCors("AllowSpecificOrigin");
-            //Add cors
-            //app.UseCors();
-            //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
+            
             //General for IIS
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
             //app.UseSwaggerUI(options =>

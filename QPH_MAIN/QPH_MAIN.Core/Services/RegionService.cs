@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using OrderByExtensions;
 using QPH_MAIN.Core.CustomEntities;
 using QPH_MAIN.Core.Entities;
 using QPH_MAIN.Core.Exceptions;
@@ -38,6 +39,13 @@ namespace QPH_MAIN.Core.Services
             if (filters.Name != null)
             {
                 regions = regions.Where(x => x.name.ToLower().Contains(filters.Name.ToLower()));
+            }
+            if (filters.orderedBy != null && filters.orderedBy.Count() > 0)
+            {
+                foreach (var sortM in filters.orderedBy)
+                {
+                    regions = regions.OrderBy(sortM.PairAsSqlExpression);
+                }
             }
             var pagedPosts = PagedList<Region>.Create(regions, filters.PageNumber, filters.PageSize);
             return pagedPosts;

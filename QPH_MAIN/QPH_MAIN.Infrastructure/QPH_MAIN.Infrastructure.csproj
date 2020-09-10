@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QPH_MAIN.Core\QPH_MAIN.Core.csproj" />
+    <ProjectReference Include="..\OrderByExtension\OrderByExtension.csproj" />
   </ItemGroup>
 
 </Project>

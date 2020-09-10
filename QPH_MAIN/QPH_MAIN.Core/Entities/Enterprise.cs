@@ -13,6 +13,7 @@ namespace QPH_MAIN.Core.Entities
 
         public int id_city { get; set; }
         public string commercial_name { get; set; }
+        public string name_application { get; set; }
         public string telephone { get; set; }
         public string email { get; set; }
         public string enterprise_address { get; set; }

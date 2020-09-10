@@ -1,13 +1,13 @@
 Use master;
 Go
 
-Drop Database AdministrationQPH;
+Drop Database RRHH_MAIN;
 Go
 
-Create Database AdministrationQPH;
+Create Database RRHH_MAIN;
 Go
 
-Use AdministrationQPH;
+Use RRHH_MAIN;
 Go
 
 /*DBCC CHECKIDENT(EnterpriseHierarchyCatalog, RESEED, 0);
@@ -42,11 +42,13 @@ Create Table Roles(
 );
 Go
 
+--Tributal Impuesto.
 Create Table Enterprise(
 	id int identity(1,1) primary key not null,
 	id_city int not null,
 	commercial_name varchar(100) not null,
 	telephone varchar(20) not null default 'N/A', -- N/A Means "NOT ASSIGNED"
+	name_application varchar(300) not null default 'N/A',
 	email varchar(100) not null default 'N/A',
 	enterprise_address varchar(300) not null,
 	identification varchar(100) not null default 'N/A', --ex: here in nicaragua every business needs a RUC.
@@ -102,6 +104,8 @@ Create Table "User"(
 	id_enterprise int not null,
 	id_country int not null, -- nationality
     nickname varchar(100) not null unique,
+	firstName varchar(300) not null,
+	lastName varchar(300) not null,
     email varchar(150) not null unique,
     phone_number varchar(50) unique,
     hashPassword varchar(max) not null,
@@ -242,12 +246,12 @@ Go
 insert into City(id_region, "name") values (1, 'Ecuador');
 Go
 
-INSERT INTO [dbo].[Enterprise]([id_city],[commercial_name],[telephone],[email],[enterprise_address],[identification],[has_branches],[latitude],[longitude],[status]) VALUES
-(1,'Dummy','87654321','dummy@gmail.com','dummy Address','876532410D',0,1111,1111, 1);
+INSERT INTO [dbo].[Enterprise]([id_city],[commercial_name],[name_application],[telephone],[email],[enterprise_address],[identification],[has_branches],[latitude],[longitude],[status]) VALUES
+(1,'Dummy','Dummy','87654321','dummy@gmail.com','dummy Address','876532410D',0,1111,1111, 1);
 GO
 
-insert into "User"(google_access_token,facebook_access_token, firebase_token,id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
-('','','',1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
+insert into "User"(firstName, lastName,google_access_token,facebook_access_token, firebase_token,id_role, id_enterprise, id_country,nickname,email,phone_number,hashPassword,status,profile_picture,is_account_activated) values 
+('FirstName','LastName','','','',1,1,1,'administrador','desarrollo.sistemas@qph.com.ec','87654321','10000.H2cZ26g32FkK/vrT25p0xA==.42AEKYOjYdoeskLAJAbaeov55uYEuy881ICeCM5E5Zw=',1,'N/A',1)
 Go
 
 INSERT INTO "Permissions"(permission) values ('crear'),('actualizar'),('eliminar'),('ordenar');
@@ -292,7 +296,7 @@ where ucp.id_permission = p.id and vc.id_view = @idView and ucg.id_user = @idUse
 End;
 Go
 
-Create Procedure BuildCardsByView(@idView int)
+Create or Alter Procedure BuildCardsByView(@idView int)
 As
 begin
 	select c.id, c.card from Cards c
@@ -322,14 +326,14 @@ End
 Go
 */
 
-Create Procedure RemoveHierarchyViewByUserNew(@idUser int)
+Create or Alter Procedure RemoveHierarchyViewByUserNew(@idUser int)
 As
 begin
 	delete from UserView where id_user = @idUser;
 End
 Go
 
-Create  Procedure RemoveCatalogHierarchyByEnterpriseNew(@idEnterprise int)
+Create or Alter Procedure RemoveCatalogHierarchyByEnterpriseNew(@idEnterprise int)
 As
 begin
 	delete from EnterpriseHierarchyCatalog where id_enterprise = @idEnterprise;
@@ -377,7 +381,7 @@ end
 Go
 */
 
-Create  Procedure HierarchyViewByUserNew(@idUser int)
+Create or Alter Procedure HierarchyViewByUserNew(@idUser int)
 As
 begin
 
@@ -408,7 +412,7 @@ With starting as (
 end
 Go
 
-Create  Procedure HierarchyCatalogByEnterpriseNew(@idEnterprise int)
+Create or Alter Procedure HierarchyCatalogByEnterpriseNew(@idEnterprise int)
 As
 begin
 
@@ -448,7 +452,7 @@ select top 1 id, id as children, id as parent, name as title, code from Catalog 
 End
 Go
 
-Create  Procedure HierarchyCatalogByCodeNew(@code varchar(50), @idEnterprise int)
+Create or Alter Procedure HierarchyCatalogByCodeNew(@code varchar(50), @idEnterprise int)
 As
 begin
 With starting as (
@@ -466,3 +470,40 @@ With starting as (
 	select id, children, parent, title, code  from descendants group by id, children, parent, title, code;
 end
 Go
+
+create or alter procedure GetTableColumns
+(
+    @schemaname nvarchar(128),
+    @tablename nvarchar(128)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    with ctePKCols as
+    (
+        select 
+            i.object_id,
+            ic.column_id
+        from 
+            sys.indexes i
+            join sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
+        where 
+            i.is_primary_key = 1
+    )
+    SELECT
+        c.name AS column_name,
+        t.name AS typename,
+        c.max_length AS MaxLength,
+        c.precision,
+        c.scale,
+        c.is_nullable,
+        is_primary_key = CASE WHEN ct.column_id IS NOT NULL THEN 1 ELSE 0 END
+    FROM 
+        sys.columns c
+        JOIN sys.types t ON t.user_type_id = c.user_type_id
+        LEFT JOIN ctePKCols ct ON ct.column_id = c.column_id AND ct.object_id = c.object_id
+    WHERE 
+        c.object_ID = OBJECT_ID(quotename(@schemaname) + '.' + quotename(@tablename))
+END 
+GO

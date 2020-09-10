@@ -34,15 +34,14 @@ namespace QPH_MAIN.Api.Controllers
             _uriService = uriService;
         }
 
-
         /// <summary>
         /// Retrieve all cards
         /// </summary>
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetCards))]
-        public IActionResult GetCards([FromQuery]CardsQueryFilter filters)
+        [HttpPost("RetrieveCards")]
+        public IActionResult GetCards([FromBody] CardsQueryFilter filters)
         {
             var cards = _cardsService.GetCards(filters);
             var citiesDto = _mapper.Map<IEnumerable<CardsDto>>(cards);

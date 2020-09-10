@@ -40,8 +40,8 @@ namespace QPH_MAIN.Api.Controllers
         /// <param name="filters">Filters to apply</param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet(Name = nameof(GetRegions))]
-        public IActionResult GetRegions([FromQuery]RegionQueryFilter filters)
+        [HttpPost("RetrieveRegions")]
+        public IActionResult GetRegions([FromBody] RegionQueryFilter filters)
         {
             if (!User.Identity.IsAuthenticated) throw new AuthenticationException();
             var regions = _regionService.GetRegions(filters);
