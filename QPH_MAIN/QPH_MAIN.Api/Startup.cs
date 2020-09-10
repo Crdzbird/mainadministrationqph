@@ -72,6 +72,13 @@ namespace QPH_MAIN.Api
                 };
             });
 
+            // services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:3000"));
+            });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
@@ -86,7 +93,12 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-            
+
+            app.UseCors("AllowSpecificOrigin");
+            //Add cors
+            //app.UseCors();
+            //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             //General for IIS
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
             //app.UseSwaggerUI(options =>
@@ -102,7 +114,7 @@ namespace QPH_MAIN.Api
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 var exception = exceptionHandlerPathFeature.Error;
 
-                var result = JsonConvert.SerializeObject(new { error = exception.Message});
+                var result = JsonConvert.SerializeObject(new { error = exception.Message });
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(result);
             }));

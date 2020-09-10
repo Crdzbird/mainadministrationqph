@@ -10,7 +10,8 @@ Go
 Use AdministrationQPH;
 Go
 
-
+/*DBCC CHECKIDENT(EnterpriseHierarchyCatalog, RESEED, 0);
+Go*/
 
 Create Table Country(
 	id int identity(1,1)primary key not null,
@@ -138,14 +139,14 @@ Create Table "Views"(
 );
 Go
 
-Create Table HierarchyView(
+/*Create Table HierarchyView(
 	id int identity(1,1) primary key not null,
 	parent int not null,
 	children int not null,
 	foreign key(parent) references Views(id),
 	foreign key(children) references Views(id),
 );
-Go
+Go*/
 
 Create Table UserView(
 	id int identity(1,1) primary key not null,
@@ -176,9 +177,6 @@ Create Table EnterpriseHierarchyCatalog(
 	foreign key(parent) references "Catalog"(id),
 	foreign key(children) references "Catalog"(id)
 );
-Go
-
-DBCC CHECKIDENT(EnterpriseHierarchyCatalog, RESEED, 0);
 Go
 
 Create Table "Permissions"(
@@ -284,7 +282,7 @@ Go
 insert into EnterpriseHierarchyCatalog(id_enterprise,parent,children)values(1,1,2),(1,2,3),(1,3,5),(1,2,4),(1,4,6),(1,4,7),(1,1,8),(1,8,9);
 Go
 
-Create  Procedure PermissionStatus(@idUser int, @idView int)
+Create Procedure PermissionStatus(@idUser int, @idView int)
 As
 Begin
 Select p.id, p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
@@ -303,8 +301,8 @@ begin
 	where v.id = @idView
 end;
 Go
-
-Create Procedure RemoveHierarchyViewByUser(@idUser int)
+/*
+Create or Alter Procedure RemoveHierarchyViewByUser(@idUser int)
 As
 begin
 With starting as (
@@ -313,15 +311,16 @@ With starting as (
 		where t.parent = 1 and t.id_user = @idUser
 	),
 	descendants as (
-		select t.children as id, t.children, t.parent, children."name" as title, children.route
+		select t.children as id, t.children, t.parent, children."name" as title, children.ruta
 		from starting t join  "Views" as children on children.id = t.children
 		union all 
-		select t.children as id, t.children, t.parent, children."name" as title, children.route
+		select t.children as id, t.children, t.parent, children."name" as title, children.ruta
 		from UserView as t join descendants as d on t.parent = d.children join "Views" as children on children.id = t.children
 	)
 	delete from HierarchyView where children in( select children  from descendants where id in (select id_view from UserView where id_user = @idUser) group by id, children, parent, title);
 End
 Go
+*/
 
 Create Procedure RemoveHierarchyViewByUserNew(@idUser int)
 As
@@ -440,12 +439,12 @@ With starting as (
 end
 Go
 
-Create  Procedure RootCatalogByCodeEnterprise(@code varchar(50), @idEnterprise int)
+Create Procedure RootCatalogByCodeEnterprise(@code varchar(50), @idEnterprise int)
 As
 begin
 select top 1 id, id as children, id as parent, name as title, code from Catalog where id = (
 	(select top 1 t.parent from EnterpriseHierarchyCatalog as t where t.parent = 
-		(select id from Catalog where code = @code) and t.id_enterprise = @idEnterprise))
+		(select id from Catalog where code = @code) and t.id_enterprise = @idEnterprise));
 End
 Go
 
