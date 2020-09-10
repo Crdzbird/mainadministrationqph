@@ -45,7 +45,7 @@ namespace QPH_MAIN.Api
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
-                       // .WithOrigins("http://localhost:3000")
+                       //.WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
