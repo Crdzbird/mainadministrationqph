@@ -9,6 +9,7 @@ namespace QPH_MAIN.Core.Interfaces
     {
         PagedList<Country> GetCountries(CountryQueryFilter filters);
         Task<Country> GetCountry(int id);
+        Task<Country> GetCountryByName(string name);
         Task InsertCountry(Country country);
         Task<bool> UpdateCountry(Country country);
         Task<bool> DeleteCountry(int id);

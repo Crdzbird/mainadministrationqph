@@ -85,7 +85,7 @@ Go
 
 Create Table Blacklist(
 	id int identity(1,1) primary key not null,
-	public_ip varbinary(16) not null
+	public_ip varchar(16) not null
 );
 Go
 
@@ -163,6 +163,9 @@ Create Table UserView(
 );
 Go
 
+--CATALOGO TIENE CONFIGURACION QUE SE LLAMA CANAL.
+-- CANAL SE IRA EN UN PROYECTO NUEVO Y UNA BD NUEVA.
+
 Create Table "Catalog"(
 	id int identity(1,1) primary key not null,
 	code varchar(50) not null,
@@ -234,10 +237,10 @@ insert into catalog(code,name,description,status) values
 ('nuevo','Nuevo','Nuevo Descripcion',1);
 Go
 
-insert into Roles(rolename, "status") values ('Administrador', 1);
+insert into Roles(rolename, "status") values ('Administrador', 1), ('Anonimo', 1);
 Go
 
-insert into Country("name") values ('Ecuador');
+insert into Country("name") values ('Ecuador'),('N/A');
 Go
 
 insert into Region(id_country, "name") values (1, 'Ecuador');
@@ -286,7 +289,7 @@ Go
 insert into EnterpriseHierarchyCatalog(id_enterprise,parent,children)values(1,1,2),(1,2,3),(1,3,5),(1,2,4),(1,4,6),(1,4,7),(1,1,8),(1,8,9);
 Go
 
-Create Procedure PermissionStatus(@idUser int, @idView int)
+Create or Alter Procedure PermissionStatus(@idUser int, @idView int)
 As
 Begin
 Select p.id, p.permission, (case when exists(select cast(1 as bit) from UserCardPermissions ucp 
@@ -305,6 +308,7 @@ begin
 	where v.id = @idView
 end;
 Go
+
 /*
 Create or Alter Procedure RemoveHierarchyViewByUser(@idUser int)
 As
@@ -326,6 +330,7 @@ End
 Go
 */
 
+/*ESTA TRABAJANDO EN EL EF, OMITIR*/
 Create or Alter Procedure RemoveHierarchyViewByUserNew(@idUser int)
 As
 begin
@@ -443,7 +448,7 @@ With starting as (
 end
 Go
 
-Create Procedure RootCatalogByCodeEnterprise(@code varchar(50), @idEnterprise int)
+Create or Alter Procedure RootCatalogByCodeEnterprise(@code varchar(50), @idEnterprise int)
 As
 begin
 select top 1 id, id as children, id as parent, name as title, code from Catalog where id = (
@@ -471,8 +476,7 @@ With starting as (
 end
 Go
 
-create or alter procedure GetTableColumns
-(
+create or alter procedure GetTableColumns(
     @schemaname nvarchar(128),
     @tablename nvarchar(128)
 )

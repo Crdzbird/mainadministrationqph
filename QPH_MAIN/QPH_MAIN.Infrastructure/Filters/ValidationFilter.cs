@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using QPH_MAIN.Core.CustomEntities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace QPH_MAIN.Infrastructure.Filters
@@ -10,7 +12,15 @@ namespace QPH_MAIN.Infrastructure.Filters
         {
             if (!context.ModelState.IsValid)
             {
-                context.Result = new BadRequestObjectResult(context.ModelState);
+                CustomErrors cErrors = new CustomErrors();
+                foreach (var modelState in context.ModelState)
+                {
+                    foreach (var errors in modelState.Value.Errors)
+                    {
+                        cErrors.messages.Add(errors.ErrorMessage);
+                    }
+                }
+                context.Result = new BadRequestObjectResult(cErrors);
                 return;
             }
             await next();

@@ -22,6 +22,8 @@ namespace QPH_MAIN.Core.Services
 
         public async Task<Country> GetCountry(int id) => await _unitOfWork.CountryRepository.GetById(id);
 
+        public async Task<Country> GetCountryByName(string name) => await _unitOfWork.CountryRepository.GetByName(name);
+
         public PagedList<Country> GetCountries(CountryQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;

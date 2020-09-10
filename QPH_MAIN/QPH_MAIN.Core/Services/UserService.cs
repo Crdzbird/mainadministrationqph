@@ -107,6 +107,9 @@ namespace QPH_MAIN.Core.Services
             if (await _unitOfWork.CountryRepository.GetById(user.id_country) == null) throw new BusinessException("Country doesn't exist");
             user.activation_code = GenerateActivationCode();
             user.status = false;
+            user.phone_number = "N/A";
+            user.profile_picture = "N/A";
+            //TODO ID ROL, EMPRESA, PAIS DEJARLOS ASIGNADOS COMO USUARIO ANONIMO.
             user.is_account_activated = false;
             user.facebook_access_token = user.facebook_access_token ?? "";
             user.firebase_token = user.firebase_token ?? "";
