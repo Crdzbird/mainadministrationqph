@@ -141,14 +141,15 @@ namespace QPH_MAIN.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
-            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode=";
             if (userDto.id_role.ToString() == null || userDto.id_role == 0) userDto.id_role = _rolesService.GetRoleByName("Anonimo").Result.Id;
             if (userDto.id_country.ToString() == null || userDto.id_country == 0) userDto.id_country = _countryService.GetCountryByName("Ecuador").Result.Id;
             if (userDto.id_enterprise.ToString() == null || userDto.id_enterprise == 0) userDto.id_enterprise = _enterpriseService.GetEnterpriseByName("Dummy").Result.Id;
-            if (userDto.phone_number == null) userDto.phone_number = "N/A";
+            if (userDto.phone_number == null || userDto.phone_number == "") userDto.phone_number = "N/A";
+            if (userDto.profile_picture == null || userDto.profile_picture == "") userDto.profile_picture = "N/A";
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
+            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={userDto.activation_code}";
             _userService.SendMail(user.activation_code, user.email, activationUrl);
             userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);

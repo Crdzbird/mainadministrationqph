@@ -10,6 +10,6 @@ namespace QPH_MAIN.Infrastructure.Repositories
     {
         public RolesRepository(QPHContext context) : base(context) { }
 
-        public async Task<Roles> GetByName(string name) => await _entities.FirstOrDefaultAsync(x => x.rolename == name);
+        public async Task<Roles> GetByName(string name) => await _entities.FirstOrDefaultAsync(x => x.rolename.ToLower() == name.ToLower());
     }
 }
