@@ -33,6 +33,12 @@ namespace QPH_MAIN.Infrastructure.Extensions
             return services;
         }
 
+        public static IServiceCollection AddRouting(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<CustomRoutes>(options => configuration.GetSection("Routing").Bind(options));
+            return services;
+        }
+
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
@@ -59,6 +65,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<ICatalogService, CatalogService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IPasswordService, PasswordService>();
+            services.AddSingleton<IRoutingService, RoutingService>();
             services.AddSingleton<IUriService>(provider =>
             {
                 var accesor = provider.GetRequiredService<IHttpContextAccessor>();

@@ -22,6 +22,8 @@ namespace QPH_MAIN.Core.Services
 
         public async Task<Roles> GetRole(int id) => await _unitOfWork.RolesRepository.GetById(id);
 
+        public async Task<Roles> GetRoleByName(string name) => await _unitOfWork.RolesRepository.GetByName(name);
+
         public PagedList<Roles> GetRoles(RolesQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;

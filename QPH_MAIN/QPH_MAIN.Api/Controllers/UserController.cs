@@ -30,15 +30,23 @@ namespace QPH_MAIN.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IPasswordService _passwordService;
+        private readonly IRoutingService _routingService;
+        private readonly IRolesService _rolesService;
+        private readonly ICountryService _countryService;
+        private readonly IEnterpriseService _enterpriseService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IUriService _uriService;
 
-        public UserController(IMapper mapper, IUriService uriService, IConfiguration configuration, IUserService userService, IPasswordService passwordService)
+        public UserController(IMapper mapper, IRoutingService routingService, IUriService uriService, IConfiguration configuration, ICountryService countryService, IEnterpriseService enterpriseService, IRolesService rolesService, IUserService userService, IPasswordService passwordService)
         {
             _mapper = mapper;
+            _routingService = routingService;
             _uriService = uriService;
             _userService = userService;
+            _countryService = countryService;
+            _enterpriseService = enterpriseService;
+            _rolesService = rolesService;
             _configuration = configuration;
             _passwordService = passwordService;
         }
@@ -99,7 +107,7 @@ namespace QPH_MAIN.Api.Controllers
                 var token = GenerateToken(validation.Item2);
                 return Ok(new { token });
             }
-            return NotFound("User not activated or not found");
+            return Ok(new { message = "User not activated or not found" });
         }
 
 
@@ -133,10 +141,14 @@ namespace QPH_MAIN.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
+            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode=";
+            if (userDto.id_role.ToString() == null || userDto.id_role == 0) userDto.id_role = _rolesService.GetRoleByName("Anonimo").Result.Id;
+            if (userDto.id_country.ToString() == null || userDto.id_country == 0) userDto.id_country = _countryService.GetCountryByName("Ecuador").Result.Id;
+            if (userDto.id_enterprise.ToString() == null || userDto.id_enterprise == 0) userDto.id_enterprise = _enterpriseService.GetEnterpriseByName("Dummy").Result.Id;
+            if (userDto.phone_number == null) userDto.phone_number = "N/A";
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
-            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + $"api/User/activateAccount?activationCode={user.activation_code}";
             _userService.SendMail(user.activation_code, user.email, activationUrl);
             userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);
@@ -159,7 +171,7 @@ namespace QPH_MAIN.Api.Controllers
         }
 
         /// <summary>
-        /// Remove city by id
+        /// Remove user by id
         /// </summary>
         [Authorize]
         [HttpDelete("{id}")]
