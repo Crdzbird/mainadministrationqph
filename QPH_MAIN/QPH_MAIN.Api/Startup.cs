@@ -45,9 +45,11 @@ namespace QPH_MAIN.Api
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
+                        .WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
             services.AddServices();
@@ -89,7 +91,9 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-            
+
+            app.UseCors("MyPolicy");
+
             //General for IIS /swagger exact path
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
 
