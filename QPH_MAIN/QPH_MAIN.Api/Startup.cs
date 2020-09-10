@@ -40,6 +40,8 @@ namespace QPH_MAIN.Api
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
+
+            //Solve enable cors *
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -88,14 +90,8 @@ namespace QPH_MAIN.Api
             app.UseHttpsRedirection();
             app.UseSwagger();
             
-            //General for IIS
+            //General for IIS /swagger exact path
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
-            //app.UseSwaggerUI(options =>
-            //{
-            //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
-            //    options.RoutePrefix = string.Empty;
-            //});
-
 
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
