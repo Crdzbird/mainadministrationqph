@@ -91,11 +91,7 @@ namespace QPH_MAIN.Api
             app.UseSwagger();
             //use cors
             app.UseCors("MyPolicy");
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
-                options.RoutePrefix = string.Empty;
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
             {
