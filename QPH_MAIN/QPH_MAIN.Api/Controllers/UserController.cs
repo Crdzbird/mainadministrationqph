@@ -107,9 +107,8 @@ namespace QPH_MAIN.Api.Controllers
                 var token = GenerateToken(validation.Item2);
                 return Ok(new { token });
             }
-            return Ok(new { message = "User not activated or not found" });
+            return NotFound(new { message = "Usuario o Contraseña incorrecta." });
         }
-
 
         /// <summary>
         /// Retrieve user by id

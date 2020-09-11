@@ -218,7 +218,8 @@ namespace QPH_MAIN.Core.Services
             existingUser.country.users = null;
             existingUser.country.regions = null;
             existingUser.roles.users = null;
-            return new UserDetailDto {
+            return new UserDetailDto
+            {
                 Id_role = existingUser.roles.Id,
                 Id_enterprise = existingUser.enterprise.Id,
                 Id_country = existingUser.country.Id,
