@@ -43,7 +43,6 @@ namespace QPH_MAIN.Api
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
-                       //.WithOrigins("http://localhost:3000")
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
@@ -91,11 +90,10 @@ namespace QPH_MAIN.Api
             app.UseSwagger();
             //use cors
             app.UseCors("MyPolicy");
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "QPH_MAIN API V1"); });
-            //app.UseSwaggerUI(options => {
-            //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
-            //    options.RoutePrefix = string.Empty;
-            //});
+            app.UseSwaggerUI(options => {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");
+                options.RoutePrefix = string.Empty;
+            });
             app.UseAntiXssMiddleware();
             app.UseExceptionHandler(a => a.Run(async context =>
             {
