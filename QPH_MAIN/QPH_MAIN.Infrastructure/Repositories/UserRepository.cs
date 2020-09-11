@@ -11,6 +11,25 @@ namespace QPH_MAIN.Infrastructure.Repositories
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         public UserRepository(QPHContext context) : base(context) { }
+
+        public async Task<bool> CheckDuplicatedEmail(string email)
+        {
+            var result = await _entities.FirstOrDefaultAsync(u => u.email == email);
+            return (result != null) ? true : false;
+        }
+
+        public async Task<bool> CheckDuplicatedNickname(string nickname)
+        {
+            var result = await _entities.FirstOrDefaultAsync(u => u.nickname == nickname);
+            return (result != null) ? true : false;
+        }
+
+        public async Task<bool> CheckDuplicatedPhone(string phone)
+        {
+            var result = await _entities.FirstOrDefaultAsync(u => u.phone_number == phone);
+            return (result != null) ? true : false;
+        }
+
         public async Task<User> GetByUsername(string username) => await _entities.Where(x => x.email == username).Where(x => x.status == true).Where(x => x.is_account_activated == true).FirstOrDefaultAsync();
         public async Task<User> GetDetailUser(int userId) => await _entities.Include(r => r.roles).Include(e => e.enterprise).Include(c => c.country).Where(u => u.Id == userId).FirstOrDefaultAsync();
         public async Task<User> GetUserByActivationCode(string activationCode) => await _entities.Where(x => x.activation_code == activationCode && x.activation_code != "" && x.is_account_activated == false && x.status == false).FirstOrDefaultAsync();

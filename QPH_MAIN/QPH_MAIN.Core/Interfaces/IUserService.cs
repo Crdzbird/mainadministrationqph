@@ -14,6 +14,9 @@ namespace QPH_MAIN.Core.Interfaces
         Task<User> GetLoginByCredentials(UserLogin userLogin);
         Task<bool> UpdateUser(User user);
         Task<bool> DeleteUser(int id);
+        Task<bool> CheckDuplicatedEmail(string email);
+        Task<bool> CheckDuplicatedPhone(string phone);
+        Task<bool> CheckDuplicatedNickname(string nickname);
         Task<bool> ActivateUserAccount(string code);
         Task<bool> CheckActivationCode(string code);
         Task<UserDetailDto> GetUserDetail(int userId);

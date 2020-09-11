@@ -231,5 +231,11 @@ namespace QPH_MAIN.Core.Services
                 Tree = await _unitOfWork.TreeRepository.GetTreeByUserId(userId)
             };
         }
+
+        public async Task<bool> CheckDuplicatedEmail(string email) => await _unitOfWork.UserRepository.CheckDuplicatedEmail(email);
+
+        public async Task<bool> CheckDuplicatedPhone(string phone) => await _unitOfWork.UserRepository.CheckDuplicatedPhone(phone);
+
+        public async Task<bool> CheckDuplicatedNickname(string nickname) => await _unitOfWork.UserRepository.CheckDuplicatedNickname(nickname);
     }
 }
