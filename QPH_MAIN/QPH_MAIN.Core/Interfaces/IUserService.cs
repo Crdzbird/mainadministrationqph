@@ -21,6 +21,6 @@ namespace QPH_MAIN.Core.Interfaces
         Task<bool> CheckActivationCode(string code);
         Task<UserDetailDto> GetUserDetail(int userId);
         void SendMail(string code, string destination, string message);
-        string GenerateActivationCode(int length = 32, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~[!]+-._*~");
+        string GenerateActivationCode(int length = 48, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     }
 }

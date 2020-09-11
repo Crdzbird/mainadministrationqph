@@ -173,7 +173,7 @@ namespace QPH_MAIN.Core.Services
             smtpClient.Dispose();
         }
 
-        public string GenerateActivationCode(int length = 36, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!+-._*")
+        public string GenerateActivationCode(int length = 48, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         {
             if (length < 0) throw new ArgumentOutOfRangeException("length", "length no puede ser menor a 0.");
             if (string.IsNullOrEmpty(allowedChars)) throw new ArgumentException("allowedChars no debe estar vacio.");

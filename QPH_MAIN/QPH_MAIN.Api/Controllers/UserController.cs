@@ -154,8 +154,9 @@ namespace QPH_MAIN.Api.Controllers
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
-            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={userDto.activation_code}";
+            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={user.activation_code}";
             _userService.SendMail(user.activation_code, user.email, activationUrl);
+            user.hashPassword = null;
             userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);
             return Ok(response);
