@@ -140,16 +140,22 @@ namespace QPH_MAIN.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
+            var customErrors = new CustomErrors();
             if (userDto.id_role.ToString() == null || userDto.id_role == 0) userDto.id_role = _rolesService.GetRoleByName("Anonimo").Result.Id;
             if (userDto.id_country.ToString() == null || userDto.id_country == 0) userDto.id_country = _countryService.GetCountryByName("Ecuador").Result.Id;
             if (userDto.id_enterprise.ToString() == null || userDto.id_enterprise == 0) userDto.id_enterprise = _enterpriseService.GetEnterpriseByName("Dummy").Result.Id;
             if (userDto.phone_number == null || userDto.phone_number == "") userDto.phone_number = "N/A";
             if (userDto.profile_picture == null || userDto.profile_picture == "") userDto.profile_picture = "N/A";
+            if (await _userService.CheckDuplicatedEmail(userDto.email)) customErrors.messages.Add("Email se encuentra en uso");
+            if (await _userService.CheckDuplicatedNickname(userDto.nickname)) customErrors.messages.Add("Nickname se encuentra en uso");
+            if (await _userService.CheckDuplicatedPhone(userDto.phone_number)) customErrors.messages.Add("Telefono se encuentra en uso");
+            if (customErrors.messages.Count > 0) return Ok(customErrors);
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
             var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={user.activation_code}";
             _userService.SendMail(user.activation_code, user.email, activationUrl);
+            user.hashPassword = null;
             userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);
             return Ok(response);

@@ -7,7 +7,7 @@ namespace QPH_MAIN.Infrastructure.Validators
     {
         public UserValidator()
         {
-                    RuleFor(user => user.firstName)
+             RuleFor(user => user.firstName)
             .NotNull()
             .WithMessage("Nombres de usuario no puede ser nulo.");
                     RuleFor(user => user.lastName)
