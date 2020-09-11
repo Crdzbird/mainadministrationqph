@@ -107,7 +107,7 @@ Create Table "User"(
 	firstName varchar(300) not null,
 	lastName varchar(300) not null,
     email varchar(150) not null unique,
-    phone_number varchar(50) unique,
+    phone_number varchar(50),
     hashPassword varchar(max) not null,
 	activation_code varchar(max),
     google_access_token varchar(max) not null,
