@@ -107,9 +107,8 @@ namespace QPH_MAIN.Api.Controllers
                 var token = GenerateToken(validation.Item2);
                 return Ok(new { token });
             }
-            return Ok(new { message = "User not activated or not found" });
+            return NotFound(new { message = "Usuario o Contraseña incorrecta." });
         }
-
 
         /// <summary>
         /// Retrieve user by id
@@ -149,7 +148,7 @@ namespace QPH_MAIN.Api.Controllers
             var user = _mapper.Map<User>(userDto);
             user.hashPassword = _passwordService.Hash(user.hashPassword);
             user = await _userService.InsertUser(user);
-            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={userDto.activation_code}";
+            var activationUrl = _uriService.GetActivationUri(Url.RouteUrl(nameof(ActivateAccount))).ToString() + _routingService.GetRoute() + $"api/User/activateAccount?activationCode={user.activation_code}";
             _userService.SendMail(user.activation_code, user.email, activationUrl);
             userDto = _mapper.Map<UserDto>(user);
             var response = new ApiResponse<UserDto>(userDto);
