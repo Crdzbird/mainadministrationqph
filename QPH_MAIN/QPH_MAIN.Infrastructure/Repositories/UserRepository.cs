@@ -26,7 +26,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
 
         public async Task<bool> CheckDuplicatedPhone(string phone)
         {
-            var result = await _entities.FirstOrDefaultAsync(u => u.phone_number == phone);
+            var result = await _entities.Where(u => u.phone_number == phone).Where(u => u.phone_number.ToLower() != "N/A".ToLower()).FirstOrDefaultAsync();
             return (result != null) ? true : false;
         }
 
