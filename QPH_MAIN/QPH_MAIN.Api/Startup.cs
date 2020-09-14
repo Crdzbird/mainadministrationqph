@@ -49,12 +49,13 @@ namespace QPH_MAIN.Api
             services.AddRouting(Configuration);
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
+            services.AddDbChannelContexts(Configuration);
             services.AddServices();
             services.AddSwagger($"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "API QPH_MAIN", Version = "v1" });
-                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
             services.AddAuthentication(options =>
             {
@@ -88,7 +89,6 @@ namespace QPH_MAIN.Api
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseSwagger();
-            //use cors
             app.UseCors("MyPolicy");
             app.UseSwaggerUI(options => {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "QPH_MAIN API V1");

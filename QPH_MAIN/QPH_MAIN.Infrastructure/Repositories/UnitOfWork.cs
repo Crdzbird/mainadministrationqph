@@ -7,7 +7,9 @@ namespace QPH_MAIN.Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly QPHContext _context;
+        private readonly QPHChannelContext _channelContext;
         private readonly ICityRepository _cityRepository;
+        private readonly IChannelRepository _channelRepository;
         private readonly ISystemParametersRepository _systemParametersRepository;
         private readonly ITableColumnRepository _tableColumnRepository;
         private readonly ICardsRepository _cardsRepository;
@@ -34,6 +36,7 @@ namespace QPH_MAIN.Infrastructure.Repositories
         }
 
         public ICityRepository CityRepository => _cityRepository ?? new CityRepository(_context);
+        public IChannelRepository ChannelRepository => _channelRepository ?? new ChannelRepository(_channelContext);
         public ITableColumnRepository TableColumnRepository => _tableColumnRepository ?? new TableColumnRepository(_context);
         public ISystemParametersRepository SystemParametersRepository => _systemParametersRepository ?? new SystemParametersRepository(_context);
         public ICardsRepository CardsRepository => _cardsRepository ?? new CardsRepository(_context);

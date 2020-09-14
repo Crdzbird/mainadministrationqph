@@ -48,6 +48,7 @@ namespace QPH_MAIN.Channel
             services.AddRouting(Configuration);
             services.AddOptions(Configuration);
             services.AddDbContexts(Configuration);
+            services.AddDbChannelContexts(Configuration);
             services.AddServices();
             services.AddSwagger($"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
             services.AddSwaggerGen(c =>

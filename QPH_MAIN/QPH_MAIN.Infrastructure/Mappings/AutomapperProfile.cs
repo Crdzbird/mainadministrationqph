@@ -30,6 +30,8 @@ namespace QPH_MAIN.Infrastructure.Mappings
             CreateMap<TableColumnDto, TableColumn>();
             CreateMap<CatalogTree, CatalogTreeDto>();
             CreateMap<CatalogTreeDto, CatalogTree>();
+            CreateMap<Channel, ChannelDto>();
+            CreateMap<ChannelDto, Channel>();
             CreateMap<UserView, UserViewDto>();
             CreateMap<UserViewDto, UserView>();
             CreateMap<EnterpriseHierarchyCatalog, EnterpriseHierarchyCatalogDto>();

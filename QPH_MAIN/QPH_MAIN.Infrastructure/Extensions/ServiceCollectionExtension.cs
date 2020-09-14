@@ -26,6 +26,14 @@ namespace QPH_MAIN.Infrastructure.Extensions
             return services;
         }
 
+        public static IServiceCollection AddDbChannelContexts(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<QPHChannelContext>(options =>
+               options.UseSqlServer(configuration.GetConnectionString("RRHH_MAIN_CHANNEL"))
+           );
+            return services;
+        }
+
         public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<PaginationOptions>(options => configuration.GetSection("Pagination").Bind(options));
@@ -42,10 +50,12 @@ namespace QPH_MAIN.Infrastructure.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(BaseChannelRepository<>));
             services.AddScoped(typeof(ICodeRepository<>), typeof(BaseCodeRepository<>));
             services.AddTransient<ISystemParametersService, SystemParametersService>();
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<ICardsService, CardsService>();
+            services.AddTransient<IChannelService, ChannelService>();
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IEnterpriseService, EnterpriseService>();
             services.AddTransient<IUserViewService, HierarchyViewService>();
@@ -64,6 +74,7 @@ namespace QPH_MAIN.Infrastructure.Extensions
             services.AddTransient<IViewService, ViewService>();
             services.AddTransient<ICatalogService, CatalogService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWorkChannel, UnitOfWorkChannel>();
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<IRoutingService, RoutingService>();
             services.AddSingleton<IUriService>(provider =>
