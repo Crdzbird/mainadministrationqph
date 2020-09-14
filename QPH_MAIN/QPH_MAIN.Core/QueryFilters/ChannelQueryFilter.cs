@@ -9,6 +9,7 @@ namespace QPH_MAIN.Core.QueryFilters
         public DateTime Fecha { get; set; }
         public string Segmento { get; set; }
         public string PuntoEmision { get; set; }
+        public string Enlace { get; set; }
         public string Ambiente { get; set; }
         public double Iva { get; set; }
         public string CodigoProducto { get; set; }

@@ -38,6 +38,7 @@ namespace QPH_MAIN.Core.Services
                 Channel = Channel.Where(x => x.CuentaContable.ToLower().Contains(filters.filter.ToLower()));
                 Channel = Channel.Where(x => x.DocumentoElectronico.ToLower().Contains(filters.filter.ToLower()));
                 Channel = Channel.Where(x => x.FormaPago.ToLower().Contains(filters.filter.ToLower()));
+                Channel = Channel.Where(x => x.Enlace.ToLower().Contains(filters.filter.ToLower()));
                 Channel = Channel.Where(x => x.GrupoCredito.ToLower().Contains(filters.filter.ToLower()));
                 Channel = Channel.Where(x => x.Iva.ToString().ToLower().Contains(filters.filter.ToLower()));
                 Channel = Channel.Where(x => x.LimiteCredito.ToLower().Contains(filters.filter.ToLower()));
@@ -58,6 +59,10 @@ namespace QPH_MAIN.Core.Services
             if (filters.Bodega != null)
             {
                 Channel = Channel.Where(x => x.Bodega.ToLower().Contains(filters.Bodega.ToLower()));
+            }
+            if (filters.Enlace != null)
+            {
+                Channel = Channel.Where(x => x.Enlace.ToLower().Contains(filters.Enlace.ToLower()));
             }
             if (filters.CategoriaCliente != null)
             {

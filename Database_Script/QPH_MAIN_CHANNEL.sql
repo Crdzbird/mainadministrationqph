@@ -1,3 +1,9 @@
+Use master;
+Go
+
+Drop Database RRHH_MAIN_CHANNEL;
+Go
+
 Create Database RRHH_MAIN_CHANNEL
 Go
 
@@ -7,6 +13,7 @@ Go
 Create Table Channel(
 	id int identity(1,1) primary key not null,
 	fecha date not null,
+	enlace varchar(max) not null,
 	segmento varchar(300) not null,
 	puntoEmision varchar(300) not null,
 	ambiente varchar(300) not null,
